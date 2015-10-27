@@ -1,0 +1,8 @@
+name: SafeTrade
+version: 1.0.0
+author: BtoBastian
+main: de.oppermann.bastian.safetrade.Main
+softdepend: [Vault]
+commands:
+   trade:
+     description: Starts a trade. More information with /trade help!

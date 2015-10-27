@@ -1,0 +1,45 @@
+######################################################################
+######################################################################
+###           _____        __  _______            _                ###
+###          / ____|      / _||__   __|          | |               ###
+###         | (___   __ _| |_ ___| |_ __ __ _  __| | ___           ###
+###          \___ \ / _` |  _/ _ \ | '__/ _` |/ _` |/ _ \          ###
+###          ____) | (_| | ||  __/ | | | (_| | (_| |  __/          ###
+###         |_____/ \__,_|_| \___|_|_|  \__,_|\__,_|\___|          ###
+###                                           by BtoBastian        ###
+######################################################################
+######################################################################
+#                            Main settings                           #
+######################################################################
+# Already translated languages: en, de                               #
+# Format: You must use IETF BCP 47 language tags.                    #
+#         To translate the plugin yourself, you must create a        #
+#         Messages_language.properties file  .                       #
+######################################################################
+language: "auto"
+######################################################################
+# Some languages may need an other charset. The default encoding     #
+# is UTF-8 which supports most common languages. If some characters  #
+# of your own translation get replaced with strange characters or    #
+# question marks you should try to change the encoding (e.g. UTF-16) #
+# Of course you must encode the Messages-file, too.                  #
+######################################################################
+encoding: "UTF-8"
+######################################################################
+# Should it be allowed to trade with money?                          #
+######################################################################
+tradeWithMoney: true
+######################################################################
+# Is it forbidden to get run into debt?                              #
+######################################################################
+noDebts: true
+######################################################################
+# How many blocks can players be away to trade?                      #
+# Set this to -1 if you don't want a maximum trading distance.       #
+######################################################################
+maxTradingDistance: 15
+######################################################################
+# Should it be allowed to trade with players in other worlds?        #
+# If this is set to true, maxTradingDistance will have no effect!    #
+######################################################################
+tradeThroughWorlds: false
