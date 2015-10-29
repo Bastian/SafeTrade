@@ -320,7 +320,7 @@ public class Trade {
      * @return The current slots the player is allowed to modify (place/move/remove items).
      */
     public List<Integer> getCurrentAllowedSlots(UUID player) {
-        if (isReadyOrHasAccepted(player)) {
+        if (status || isReadyOrHasAccepted(player)) {
             return Arrays.asList();
         }
         if (economy == null) {

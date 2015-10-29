@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>de.oppermann.bastian.safetrade</groupId>
   <artifactId>safetrade</artifactId>
-  <version>1.0.0-RELEASE</version>
+  <version>1.0.3-RELEASE</version>
   <name>SafeTrade</name>  
   <repositories>
     <repository>

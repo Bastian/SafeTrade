@@ -1,5 +1,5 @@
 name: SafeTrade
-version: 1.0.0
+version: 1.0.3
 author: BtoBastian
 main: de.oppermann.bastian.safetrade.Main
 softdepend: [Vault]

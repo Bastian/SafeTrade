@@ -48,8 +48,10 @@ public class InventoryClickListener implements Listener {
 			        event.setCancelled(true);
 			        return;
 			    }
+			    boolean checkedAction = false;
 				if (event.getAction() == InventoryAction.PICKUP_ALL) {
-				    partnerInventory.setItem(event.getRawSlot() + 5, null);					
+				    partnerInventory.setItem(event.getRawSlot() + 5, null);		
+				    checkedAction = true;
 				}
 				if (event.getAction() == InventoryAction.PICKUP_ONE) {
 					ItemStack toSet = event.getClickedInventory().getItem(event.getRawSlot()).clone();
@@ -57,7 +59,8 @@ public class InventoryClickListener implements Listener {
 					if (toSet.getAmount() == 0) {
 						toSet = null;
 					}
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);					
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);	  
+                    checkedAction = true;				
 				} 
 				if (event.getAction() == InventoryAction.PICKUP_HALF) {
 					ItemStack toSet = event.getClickedInventory().getItem(event.getRawSlot()).clone();
@@ -65,7 +68,8 @@ public class InventoryClickListener implements Listener {
 					if (toSet.getAmount() == 0) {
 						toSet = null;
 					}
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);	
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);   
+                    checkedAction = true;	
 				}
 				if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
 					ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
@@ -74,7 +78,8 @@ public class InventoryClickListener implements Listener {
 					if (toSet.getAmount() == 0) {
 						toSet = null;
 					}
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);   
+                    checkedAction = true;
 				}
 				if (event.getAction() == InventoryAction.PLACE_ONE) {
 					ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
@@ -84,7 +89,8 @@ public class InventoryClickListener implements Listener {
 					} else {
 						toSet.setAmount(1);
 					}
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);   
+                    checkedAction = true;
 				}
 				if (event.getAction() == InventoryAction.PLACE_ALL) {
 					ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
@@ -92,7 +98,8 @@ public class InventoryClickListener implements Listener {
 					if (current != null && current.isSimilar(toSet)) {
 						toSet.setAmount(current.getAmount() + toSet.getAmount());
 					}
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);   
+                    checkedAction = true;
 				}
 				if (event.getAction() == InventoryAction.PLACE_SOME) {
 					ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
@@ -103,15 +110,27 @@ public class InventoryClickListener implements Listener {
 					if (toSet.getAmount() > toSet.getMaxStackSize()) {
 						toSet.setAmount(toSet.getMaxStackSize());
 					}
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);   
+                    checkedAction = true;
 				}
 				if (event.getAction() == InventoryAction.SWAP_WITH_CURSOR) {
 					ItemStack toSet = event.getCursor().clone();
-					partnerInventory.setItem(event.getRawSlot() + 5, toSet);
+					partnerInventory.setItem(event.getRawSlot() + 5, toSet);   
+                    checkedAction = true;
 				}
 				if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-				    partnerInventory.setItem(event.getRawSlot() + 5, null);					
+				    partnerInventory.setItem(event.getRawSlot() + 5, null); 
+                    checkedAction = true;					
 				}
+				if (event.getAction() == InventoryAction.COLLECT_TO_CURSOR) {
+				    event.setCancelled(true);
+				    return;
+				}
+				if (!checkedAction) {
+				    event.setCancelled(true);
+                    return;
+				}
+				
 				Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
 					
 					@Override
@@ -136,8 +155,16 @@ public class InventoryClickListener implements Listener {
 				event.setCancelled(true);
 			}
 		} else if (event.getWhoClicked().getOpenInventory() != null && event.getWhoClicked().getOpenInventory().getTitle().equals(title)) {
-			if (event.getAction() == InventoryAction.MOVE_TO_OTHER_INVENTORY) {
-				event.setCancelled(true); // Too buggy at the moment. Maybe later?				
+			if (event.getAction() != InventoryAction.PICKUP_ALL &&
+			        event.getAction() != InventoryAction.PICKUP_HALF &&
+			        event.getAction() != InventoryAction.PICKUP_SOME &&
+			        event.getAction() != InventoryAction.PICKUP_ONE &&
+			        event.getAction() != InventoryAction.PLACE_ALL &&
+			        event.getAction() != InventoryAction.PLACE_SOME &&
+			        event.getAction() != InventoryAction.PLACE_ONE &&
+			        event.getAction() != InventoryAction.DROP_ONE_SLOT &&
+			        event.getAction() != InventoryAction.SWAP_WITH_CURSOR) {
+			    event.setCancelled(true);
 			}
 		}
 	}

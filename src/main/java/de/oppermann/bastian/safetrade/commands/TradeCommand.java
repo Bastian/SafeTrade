@@ -1,5 +1,6 @@
 package de.oppermann.bastian.safetrade.commands;
 
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import org.bukkit.entity.Player;
 import de.oppermann.bastian.safetrade.Main;
 import de.oppermann.bastian.safetrade.util.AcceptAction;
 import de.oppermann.bastian.safetrade.util.AcceptCommandManager;
+import de.oppermann.bastian.safetrade.util.JSONUtil;
 import de.oppermann.bastian.safetrade.util.Trade;
 
 /**
@@ -143,8 +145,15 @@ public class TradeCommand implements CommandExecutor {
                 .replace("{player}", target.getName()));
         target.sendMessage(ChatColor.GREEN + messages.getString("player_wants_to_trade")
                 .replace("{player}", player.getName()));
-        target.sendMessage(ChatColor.GREEN + messages.getString("how_to_accept_trade")
-                .replace("{command}", ChatColor.GOLD + "/trade accept" + ChatColor.GREEN));
+        
+        
+        
+        
+        if (!JSONUtil.sendJSONText(target, generateJSONString())) { // if something failed
+            target.sendMessage(ChatColor.GREEN + messages.getString("how_to_accept_trade")
+                    .replace("{command}", ChatColor.GOLD + "/trade accept" + ChatColor.GREEN));
+        }
+        
         final UUID targetUUID = target.getUniqueId();
         final String playerName = player.getName();
         final UUID playerUUID = player.getUniqueId();
@@ -190,6 +199,32 @@ public class TradeCommand implements CommandExecutor {
         return true;
     }
     
-
+    /**
+     * Generates the json string for how_to_accept_trade.
+     * 
+     * @return A json string.
+     */
+    private String generateJSONString() {
+        StringBuilder jsonMessage = new StringBuilder();
+        String howToMessage = messages.getString("how_to_accept_trade");
+        ArrayList<String> list = new ArrayList<>();
+        while (howToMessage.contains("{command}")) {
+            list.add(howToMessage.substring(0, howToMessage.indexOf("{command}")));
+            list.add("{command}");
+            howToMessage = howToMessage.substring(9 + howToMessage.indexOf("{command}"), howToMessage.length());
+        }
+        list.add(howToMessage);
+        jsonMessage.append("[\"\"");
+        for (String str : list) {
+            if (str.equals("{command}")) {
+                jsonMessage.append(",{\"text\":\"/trade accept\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/trade accept\"}}");
+            } else {
+                str = str.replace("\"", "");
+                jsonMessage.append(",{\"text\":\"" + str + "\",\"color\":\"green\"}");
+            }
+        }
+        jsonMessage.append("]");
+        return jsonMessage.toString();
+    }
 
 }
