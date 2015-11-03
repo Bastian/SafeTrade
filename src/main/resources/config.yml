@@ -43,3 +43,8 @@ maxTradingDistance: 15
 # If this is set to true, maxTradingDistance will have no effect!    #
 ######################################################################
 tradeThroughWorlds: false
+######################################################################
+# Should the players be able to start a trade by right clicking the  #
+# other player while sneaking?                                       #
+######################################################################
+fastTrade: false

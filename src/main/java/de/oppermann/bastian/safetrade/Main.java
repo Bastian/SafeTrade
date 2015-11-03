@@ -22,6 +22,7 @@ import de.oppermann.bastian.safetrade.commands.TradeTabCompleter;
 import de.oppermann.bastian.safetrade.listener.InventoryClickListener;
 import de.oppermann.bastian.safetrade.listener.InventoryCloseListener;
 import de.oppermann.bastian.safetrade.listener.InventoryDragListener;
+import de.oppermann.bastian.safetrade.listener.PlayerInteractEntityListener;
 import de.oppermann.bastian.safetrade.util.FileUtils;
 import de.oppermann.bastian.safetrade.util.IEconomy;
 import de.oppermann.bastian.safetrade.util.ResourceBundleControl;
@@ -68,6 +69,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryDragListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
         
         super.onEnable();
     }
@@ -153,6 +155,7 @@ public class Main extends JavaPlugin {
      * Loads the {@link ResourceBundle} for the given {@link Locale locale}.
      * 
      * @param locale The locale.
+     * @param encoding The encoding.
      * @return The ResourceBundle. If no ResourceBundle for the given locale was found it will return the default one.
      */
     private ResourceBundle loadLanguage(Locale locale, String encoding) {        
@@ -184,6 +187,14 @@ public class Main extends JavaPlugin {
             messages = ResourceBundle.getBundle("Messages");
         }
         return messages;
+    }
+    
+    /**
+     * Reloads all configuration files.
+     */
+    public void reload() {
+        this.reloadConfig();
+        // TODO reload .properties files.
     }
     
     /**

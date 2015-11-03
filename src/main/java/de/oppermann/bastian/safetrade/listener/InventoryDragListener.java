@@ -27,7 +27,7 @@ public class InventoryDragListener implements Listener {
     private ResourceBundle messages = Main.getInstance().getMessages();
     
 	/**
-     * This is called automatically by bukkit.
+     * This is called automatically by Bukkit.
      * 
      * @param event The event.
      */

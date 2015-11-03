@@ -1,6 +1,7 @@
 package de.oppermann.bastian.safetrade.commands;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.UUID;
 
@@ -26,6 +27,11 @@ public class TradeCommand implements CommandExecutor {
      * The {@link ResourceBundle} which contains all messages.
      */
     private ResourceBundle messages = Main.getInstance().getMessages();
+    
+    /**
+     * This HashMap stores the time of the last trade request.
+     */
+    private final HashMap<UUID, Long> lastRequest = new HashMap<>();
     
     /*
      * (non-Javadoc)
@@ -114,6 +120,14 @@ public class TradeCommand implements CommandExecutor {
             sender.sendMessage(ChatColor.RED + messages.getString("no_permission"));
             return true;
         }
+        
+        if (lastRequest.containsKey(player.getUniqueId())) {
+            if (lastRequest.get(player.getUniqueId()) > System.currentTimeMillis() - 1000 * 10) {
+                player.sendMessage(ChatColor.RED + messages.getString("no_request_spam"));
+                return true;
+            }
+        }
+        
         // request a trade
         Player target = Bukkit.getPlayer(args[0]);
         if (target == null) {
@@ -140,6 +154,8 @@ public class TradeCommand implements CommandExecutor {
                     .replace("{max_distance}", String.valueOf(maxDistance)));
             return true;
         }
+        
+        lastRequest.put(player.getUniqueId(), System.currentTimeMillis());
         
         player.sendMessage(ChatColor.GREEN + messages.getString("successfuly_requested_player")
                 .replace("{player}", target.getName()));
