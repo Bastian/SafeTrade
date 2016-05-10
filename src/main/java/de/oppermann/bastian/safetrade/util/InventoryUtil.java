@@ -55,14 +55,14 @@ public class InventoryUtil {
      *
      * @param type         The type of the ItemStack.
      * @param data         The data of the ItemStack.
-     * @param disyplayName The display name of the ItemStack.
+     * @param displayName The display name of the ItemStack.
      * @param lore         The lore of the ItemStack.
      * @return A ItemStack with the given values.
      */
-    public static ItemStack createItemStack(Material type, byte data, String disyplayName, String... lore) {
+    public static ItemStack createItemStack(Material type, byte data, String displayName, String... lore) {
         ItemStack itemStack = new ItemStack(type, 1, data);
         ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(disyplayName);
+        itemMeta.setDisplayName(displayName);
         if (lore.length != 0) {
             itemMeta.setLore(Lists.newArrayList(lore));
         }
