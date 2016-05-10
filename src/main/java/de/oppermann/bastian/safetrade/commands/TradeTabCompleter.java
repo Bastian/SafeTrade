@@ -1,14 +1,14 @@
 package de.oppermann.bastian.safetrade.commands;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * This is class is used for tab completion.
@@ -18,7 +18,7 @@ public class TradeTabCompleter implements TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
         List<String> list = new ArrayList<String>();
-        
+
         if (args.length == 1) { // only 1 argument is possible atm
             list.add("accept");
             list.add("deny");
@@ -29,7 +29,7 @@ public class TradeTabCompleter implements TabCompleter {
                 }
             }
         }
-        
+
         Iterator<String> iterator = list.iterator();
         while (iterator.hasNext()) {
             String str = iterator.next().toLowerCase();

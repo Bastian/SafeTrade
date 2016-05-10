@@ -5,14 +5,14 @@ package de.oppermann.bastian.safetrade.util;
  */
 public interface AcceptAction {
 
-	/**
-	 * This is called when the player accepted.
-	 */
-	public void perform();
-	
-	/**
-	 * This is called when the action times out.
-	 */
-	public void onTimeout();
-	
+    /**
+     * This is called when the player accepted.
+     */
+    public void perform();
+
+    /**
+     * This is called when the action times out.
+     */
+    public void onTimeout();
+
 }

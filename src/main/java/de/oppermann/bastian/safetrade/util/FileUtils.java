@@ -1,10 +1,6 @@
 package de.oppermann.bastian.safetrade.util;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 /**
  * This class contains some useful methods e.g. for copying files.
@@ -12,12 +8,12 @@ import java.io.OutputStream;
 public class FileUtils {
 
     private FileUtils() { /* nope */ }
-    
+
     /**
      * Copies an {@link InputStream} to a {@link File}.
-     * 
+     *
      * @param from The InputStream to copy from.
-     * @param to The File to copy to.
+     * @param to   The File to copy to.
      * @throws IOException If something went wrong.
      */
     public static void copy(InputStream from, File to) throws IOException {
@@ -50,5 +46,5 @@ public class FileUtils {
             }
         }
     }
-    
+
 }
