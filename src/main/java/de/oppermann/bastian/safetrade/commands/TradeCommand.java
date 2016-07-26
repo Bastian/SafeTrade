@@ -156,7 +156,7 @@ public class TradeCommand implements CommandExecutor {
 
         lastRequest.put(player.getUniqueId(), System.currentTimeMillis());
 
-        player.sendMessage(ChatColor.GREEN + messages.getString("successfuly_requested_player")
+        player.sendMessage(ChatColor.GREEN + messages.getString("successfully_requested_player")
                 .replace("{player}", target.getName()));
         target.sendMessage(ChatColor.GREEN + messages.getString("player_wants_to_trade")
                 .replace("{player}", player.getName()));
