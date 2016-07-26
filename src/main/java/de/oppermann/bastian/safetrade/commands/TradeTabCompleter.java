@@ -8,6 +8,7 @@ import org.bukkit.entity.Player;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 
 /**
@@ -17,7 +18,7 @@ public class TradeTabCompleter implements TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String label, String[] args) {
-        List<String> list = new ArrayList<String>();
+        List<String> list = new LinkedList<>();
 
         if (args.length == 1) { // only 1 argument is possible atm
             list.add("accept");
