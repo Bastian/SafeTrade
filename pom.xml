@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.oppermann.bastian.safetrade</groupId>
     <artifactId>safetrade</artifactId>
-    <version>1.0.4-RELEASE</version>
+    <version>1.0.5-RELEASE</version>
     <build>
         <plugins>
             <plugin>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.8-R0.1-SNAPSHOT</version>
+            <version>1.10.2-R0.1-SNAPSHOT</version>
         </dependency>
         <!-- Vault-->
         <dependency>
