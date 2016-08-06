@@ -2,14 +2,8 @@ package de.oppermann.bastian.safetrade;
 
 import de.oppermann.bastian.safetrade.commands.TradeCommand;
 import de.oppermann.bastian.safetrade.commands.TradeTabCompleter;
-import de.oppermann.bastian.safetrade.listener.InventoryClickListener;
-import de.oppermann.bastian.safetrade.listener.InventoryCloseListener;
-import de.oppermann.bastian.safetrade.listener.InventoryDragListener;
-import de.oppermann.bastian.safetrade.listener.PlayerInteractEntityListener;
-import de.oppermann.bastian.safetrade.util.FileUtils;
-import de.oppermann.bastian.safetrade.util.IEconomy;
-import de.oppermann.bastian.safetrade.util.ResourceBundleControl;
-import de.oppermann.bastian.safetrade.util.Trade;
+import de.oppermann.bastian.safetrade.listener.*;
+import de.oppermann.bastian.safetrade.util.*;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -68,6 +62,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryDragListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
         super.onEnable();
     }
