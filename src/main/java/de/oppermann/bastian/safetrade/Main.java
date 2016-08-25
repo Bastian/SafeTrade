@@ -64,6 +64,9 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
+        // start metrics
+        new Metrics(this);
+
         super.onEnable();
     }
 
