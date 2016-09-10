@@ -225,6 +225,14 @@ public class Main extends JavaPlugin {
             }
         });
 
+        // Download source
+        metrics.addCustomChart(new Metrics.SimplePie("download_source") {
+            @Override
+            public String getValue() {
+                // I will change this when before compiling
+                return "spigotmc.org";
+            }
+        });
     }
 
     /**
