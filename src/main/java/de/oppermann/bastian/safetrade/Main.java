@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
@@ -45,6 +46,26 @@ public class Main extends JavaPlugin {
      */
     private boolean tradeWithMoney = false;
 
+    /**
+     * Successful trades since last submit.
+     */
+    private int successfulTrades = 0;
+
+    /**
+     * Aborted trades since last submit.
+     */
+    private int abortedTrades = 0;
+
+    /**
+     * Whether the server has vault or not.
+     */
+    private boolean hasVault = false;
+
+    /**
+     * The name of the used economy plugin.
+     */
+    private String economyName = "No Vault installed";
+
     /*
      * (non-Javadoc)
      * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
@@ -65,7 +86,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
         // start metrics
-        new Metrics(this);
+        setupCharts(new Metrics(this));
 
         super.onEnable();
     }
@@ -80,6 +101,130 @@ public class Main extends JavaPlugin {
             trade.abort(null);
         }
         super.onDisable();
+    }
+
+    /**
+     * Setups the custom starts for bStats.
+     *
+     * @param metrics The metrics class.
+     */
+    private void setupCharts(Metrics metrics) {
+        // language in config
+        metrics.addCustomChart(new Metrics.SimplePie("used_language") {
+            @Override
+            public String getValue() {
+                return getConfig().getString("language", "auto");
+            }
+        });
+
+        metrics.addCustomChart(new Metrics.SimplePie("default_locale") {
+            @Override
+            public String getValue() {
+                return Locale.getDefault().toLanguageTag();
+            }
+        });
+
+        // encoding in config
+        metrics.addCustomChart(new Metrics.SimplePie("encoding") {
+            @Override
+            public String getValue() {
+                return getConfig().getString("encoding", "UTF-8");
+            }
+        });
+
+        // tradeWithMoney in config
+        metrics.addCustomChart(new Metrics.SimplePie("money_enabled") {
+            @Override
+            public String getValue() {
+                return getConfig().getBoolean("tradeWithMoney", true) ? "enabled" : "disabled";
+            }
+        });
+
+        // noDebts in config
+        metrics.addCustomChart(new Metrics.SimplePie("no_debts_enabled") {
+            @Override
+            public String getValue() {
+                return getConfig().getBoolean("noDebts", true) ? "enabled" : "disabled";
+            }
+        });
+
+        // maxTradingDistance in config
+        metrics.addCustomChart(new Metrics.SimplePie("max_trading_distance") {
+            @Override
+            public String getValue() {
+                return String.valueOf(getConfig().getInt("maxTradingDistance", 15));
+            }
+        });
+
+        // tradeThroughWorlds in config
+        metrics.addCustomChart(new Metrics.SimplePie("trade_through_worlds_enabled") {
+            @Override
+            public String getValue() {
+                return getConfig().getBoolean("tradeThroughWorlds", false) ? "enabled" : "disabled";
+            }
+        });
+
+        // fastTrade in config
+        metrics.addCustomChart(new Metrics.SimplePie("fast_trade_enabled") {
+            @Override
+            public String getValue() {
+                return getConfig().getBoolean("fastTrade", false) ? "enabled" : "disabled";
+            }
+        });
+
+        // successful trades
+        metrics.addCustomChart(new Metrics.SingleLineChart("successful_trades") {
+            @Override
+            public int getValue() {
+                return successfulTrades;
+            }
+        });
+
+        // aborted trades
+        metrics.addCustomChart(new Metrics.SingleLineChart("aborted_trades") {
+            @Override
+            public int getValue() {
+                return abortedTrades;
+            }
+        });
+
+        // A map which shows in which countries is traded most
+        metrics.addCustomChart(new Metrics.AdvancedMapChart("most_active_trading_regions") {
+            @Override
+            public HashMap<Metrics.Country, Integer> getValues(HashMap<Metrics.Country, Integer> valueMap) {
+                valueMap.put(Metrics.Country.AUTO_DETECT, abortedTrades + successfulTrades);
+                return valueMap;
+            }
+        });
+
+        // success rate pie
+        metrics.addCustomChart(new Metrics.AdvancedPie("trade_success_rate") {
+            @Override
+            public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
+                valueMap.put("Aborted", abortedTrades);
+                valueMap.put("Succeeded", successfulTrades);
+                abortedTrades = 0;
+                successfulTrades = 0;
+                return valueMap;
+            }
+        });
+
+        // Is Vault used?
+        metrics.addCustomChart(new Metrics.SimplePie("vault_used") {
+            @Override
+            public String getValue() {
+                return hasVault ? "Used" : "Not used";
+            }
+        });
+
+        // The used economy plugin
+        metrics.addCustomChart(new Metrics.SimplePie("economy_plugin") {
+            @Override
+            public String getValue() {
+                return economyName;
+            }
+        });
+
     }
 
     /**
@@ -111,12 +256,15 @@ public class Main extends JavaPlugin {
         messages = loadLanguage(locale, encoding); // load the language file
 
         tradeWithMoney = getConfig().getBoolean("tradeWithMoney", true);
-        if (tradeWithMoney) {
-            try {
-                final Economy economy = getVaultEconomy();
-                if (economy == null) {
+        try {
+            final Economy economy = getVaultEconomy();
+            if (economy == null) {
+                if (tradeWithMoney) {
                     getLogger().log(Level.WARNING, "Cannot find any economy plugin!");
-                } else {
+                }
+                economyName = "None";
+            } else {
+                if (tradeWithMoney) {
                     getLogger().log(Level.INFO, "Using " + economy.getName());
                     setIEconomy(new IEconomy() {
 
@@ -141,9 +289,11 @@ public class Main extends JavaPlugin {
                         }
                     });
                 }
-            } catch (NoClassDefFoundError e) {
-                getLogger().log(Level.WARNING, "Cannot find Vault!");
+                economyName = economy.getName();
             }
+            hasVault = true;
+        } catch (NoClassDefFoundError e) {
+            getLogger().log(Level.WARNING, "Cannot find Vault!");
         }
     }
 
@@ -202,6 +352,20 @@ public class Main extends JavaPlugin {
         if (tradeWithMoney) {
             this.economy = economy;
         }
+    }
+
+    /**
+     * Increments the successful trades.
+     */
+    public void incrementSuccessfulTrades() {
+        successfulTrades++;
+    }
+
+    /**
+     * Increments the aborted trades.
+     */
+    public void incrementAbortedTrades() {
+        abortedTrades++;
     }
 
     /**

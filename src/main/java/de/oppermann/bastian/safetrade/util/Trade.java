@@ -176,6 +176,8 @@ public class Trade {
 
             player1.sendMessage(ChatColor.GREEN + messages.getString("trade_succeeded"));
             player2.sendMessage(ChatColor.GREEN + messages.getString("trade_succeeded"));
+
+            Main.getInstance().incrementSuccessfulTrades();
         }
     }
 
@@ -218,7 +220,7 @@ public class Trade {
             player1.sendMessage(ChatColor.RED + messages.getString("player_aborted_trade").replace("{player}", whoAborted.getName()));
             player2.sendMessage(ChatColor.RED + messages.getString("you_aborted_trade"));
         }
-
+        Main.getInstance().incrementAbortedTrades();
     }
 
     /**
