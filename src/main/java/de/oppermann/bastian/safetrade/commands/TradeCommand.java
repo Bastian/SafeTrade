@@ -218,6 +218,7 @@ public class TradeCommand implements CommandExecutor {
      * @return A json string.
      */
     private String generateJSONString() {
+        // TODO Use JsonObject instead of this ugly method + add hover text ("Click here") to command
         StringBuilder jsonMessage = new StringBuilder();
         String howToMessage = messages.getString("how_to_accept_trade");
         ArrayList<String> list = new ArrayList<>();
