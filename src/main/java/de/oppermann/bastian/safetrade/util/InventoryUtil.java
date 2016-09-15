@@ -264,7 +264,7 @@ public class InventoryUtil {
             for (int i = 0; i < acceptLore.length; i++) {
                 acceptLore[i] = ChatColor.GRAY + acceptLore[i];
             }
-            ItemStack acceptButton = createItemStack(Material.WOOL, (byte) DyeColor.LIME.getData(),
+            ItemStack acceptButton = createItemStack(Material.WOOL, DyeColor.LIME.getData(),
                     ChatColor.DARK_GREEN + messages.getString("button_accept"), acceptLore);
 
             String[] abortLore = messages.getString("button_abort_description").split("\n");
