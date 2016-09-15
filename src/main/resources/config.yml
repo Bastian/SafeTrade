@@ -14,7 +14,7 @@
 # Already translated languages: en, de, fr, es, ru                   #
 # Format: You must use IETF BCP 47 language tags.                    #
 #         To translate the plugin yourself, you must create a        #
-#         Messages_language.properties file  .                       #
+#         Messages_language.properties file.                         #
 ######################################################################
 language: "auto"
 ######################################################################
