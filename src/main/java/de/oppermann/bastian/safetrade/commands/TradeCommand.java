@@ -11,8 +11,9 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.ResourceBundle;
 import java.util.UUID;
@@ -218,27 +219,54 @@ public class TradeCommand implements CommandExecutor {
      * @return A json string.
      */
     private String generateJSONString() {
-        // TODO Use JsonObject instead of this ugly method + add hover text ("Click here") to command
-        StringBuilder jsonMessage = new StringBuilder();
-        String howToMessage = messages.getString("how_to_accept_trade");
-        ArrayList<String> list = new ArrayList<>();
-        while (howToMessage.contains("{command}")) {
-            list.add(howToMessage.substring(0, howToMessage.indexOf("{command}")));
-            list.add("{command}");
-            howToMessage = howToMessage.substring(9 + howToMessage.indexOf("{command}"), howToMessage.length());
+        JSONArray json = new JSONArray();
+        String howToMessage = messages.getString("how_to_accept_trade") + " ";
+        String[] splitHowToMessage = howToMessage.split("\\{command\\}");
+        for (int i = 0; i < splitHowToMessage.length - 1; i++) {
+            appendText(json, splitHowToMessage[i]);
+            appendCommand(json);
         }
-        list.add(howToMessage);
-        jsonMessage.append("[\"\"");
-        for (String str : list) {
-            if (str.equals("{command}")) {
-                jsonMessage.append(",{\"text\":\"/trade accept\",\"color\":\"gold\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/trade accept\"}}");
-            } else {
-                str = str.replace("\"", "");
-                jsonMessage.append(",{\"text\":\"" + str + "\",\"color\":\"green\"}");
-            }
-        }
-        jsonMessage.append("]");
-        return jsonMessage.toString();
+        appendText(json, splitHowToMessage[splitHowToMessage.length - 1]);
+        return json.toString();
+    }
+
+    /**
+     * Appends a normal text.
+     *
+     * @param array The array the text should be append to.
+     * @param text The text tp append.
+     */
+    private void appendText(JSONArray array, String text) {
+        JSONObject json = new JSONObject();
+        json.put("text", ChatColor.GREEN + text);
+        array.add(json);
+    }
+
+    /**
+     * Appends the /trade accept command.
+     *
+     * @param array The array the command should be append to.
+     */
+    private void appendCommand(JSONArray array) {
+        JSONObject json = new JSONObject();
+        json.put("text", ChatColor.GOLD + "/trade accept");
+        JSONObject clickEvent = new JSONObject();
+        clickEvent.put("action", "run_command");
+        clickEvent.put("value", "/trade accept");
+        json.put("clickEvent", clickEvent);
+        JSONObject hoverEvent = new JSONObject();
+        hoverEvent.put("action", "show_text");
+        JSONArray hoverExtra = new JSONArray();
+        JSONObject hoverText = new JSONObject();
+        String howToCommandHover = messages.getString("how_to_accept_trade_command_hover");
+        hoverText.put("text", howToCommandHover);
+        hoverExtra.add(hoverText);
+        JSONObject value = new JSONObject();
+        value.put("text", "");
+        value.put("extra", hoverExtra);
+        hoverEvent.put("value", value);
+        json.put("hoverEvent", hoverEvent);
+        array.add(json);
     }
 
 }
