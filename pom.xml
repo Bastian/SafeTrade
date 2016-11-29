@@ -3,12 +3,13 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.oppermann.bastian.safetrade</groupId>
     <artifactId>safetrade</artifactId>
-    <version>1.0.8-RELEASE</version>
+    <version>1.0.9-RELEASE</version>
     <build>
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.6.0</version>
                 <configuration>
                     <source>1.7</source>
                     <target>1.7</target>
