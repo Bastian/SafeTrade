@@ -21,7 +21,7 @@ import java.util.zip.GZIPOutputStream;
 /**
  * bStats collects some data for plugin authors.
  *
- * Check out http://bStats.org/ to learn more about bStats!
+ * Check out https://bStats.org/ to learn more about bStats!
  */
 public class Metrics {
 
@@ -74,7 +74,7 @@ public class Metrics {
                     "bStats collects some data for plugin authors like how many servers are using their plugins.\n" +
                             "To honor their work, you should not disable it.\n" +
                             "This has nearly no effect on the server performance!\n" +
-                            "Check out http://bStats.org/ to learn more :)"
+                            "Check out https://bStats.org/ to learn more :)"
             ).copyDefaults(true);
             try {
                 config.save(configFile);
@@ -119,12 +119,24 @@ public class Metrics {
      * Starts the Scheduler which submits our data every 30 minutes.
      */
     private void startSubmitting() {
-        Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, new Runnable() {
+        final Timer timer = new Timer(true); // We use a timer cause the Bukkit scheduler is affected by server lags
+        timer.scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
-                submitData();
+                if (!plugin.isEnabled()) { // Plugin was disabled
+                    timer.cancel();
+                    return;
+                }
+                // Nevertheless we want our code to run in the Bukkit main thread, so we have to use the Bukkit scheduler
+                // Don't be afraid! The connection to the bStats server is still async, only the stats collection is sync ;)
+                Bukkit.getScheduler().runTask(plugin, new Runnable() {
+                    @Override
+                    public void run() {
+                        submitData();
+                    }
+                });
             }
-        }, 20*60*5, 20*60*30);
+        }, 1000*60*5, 1000*60*30);
         // Submit the data every 30 minutes, first time after 5 minutes to give other plugins enough time to start
         // WARNING: Changing the frequency has no effect but your plugin WILL be blocked/deleted!
         // WARNING: Just don't do it!
@@ -198,7 +210,7 @@ public class Metrics {
      * Collects the data and sends it afterwards.
      */
     private void submitData() {
-        JSONObject data = getServerData();
+        final JSONObject data = getServerData();
 
         JSONArray pluginData = new JSONArray();
         // Search for all other bStats Metrics classes to get their plugin data
@@ -216,15 +228,22 @@ public class Metrics {
 
         data.put("plugins", pluginData);
 
-        try {
-            // Send the data
-            sendData(data);
-        } catch (Exception e) {
-            // Something went wrong! :(
-            if (logFailedRequests) {
-                plugin.getLogger().log(Level.WARNING, "Could not submit plugin stats of " + plugin.getName(), e);
+        // Create a new thread for the connection to the bStats server
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    // Send the data
+                    sendData(data);
+                } catch (Exception e) {
+                    // Something went wrong! :(
+                    if (logFailedRequests) {
+                        plugin.getLogger().log(Level.WARNING, "Could not submit plugin stats of " + plugin.getName(), e);
+                    }
+                }
             }
-        }
+        }).start();
+
     }
 
     /**
@@ -236,6 +255,9 @@ public class Metrics {
     private static void sendData(JSONObject data) throws Exception {
         if (data == null) {
             throw new IllegalArgumentException("Data cannot be null!");
+        }
+        if (Bukkit.isPrimaryThread()) {
+            throw new IllegalAccessException("This method must not be called from the main thread!");
         }
         HttpsURLConnection connection = (HttpsURLConnection) new URL(URL).openConnection();
 
