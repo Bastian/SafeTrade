@@ -37,7 +37,7 @@ public class PlayerPickupItemListener implements Listener {
                 }
             }
             // If the item belongs to a player he has 30 seconds to pick it up before anyone else is allowed
-            if (System.currentTimeMillis() + 1000 * 30 > dropTimestamp && !event.getPlayer().getName().equals(owner)) {
+            if (System.currentTimeMillis() - 1000 * 30 < dropTimestamp && !event.getPlayer().getName().equals(owner)) {
                 event.setCancelled(true);
             }
         }
