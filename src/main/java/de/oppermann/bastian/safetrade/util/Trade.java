@@ -3,9 +3,11 @@ package de.oppermann.bastian.safetrade.util;
 import de.oppermann.bastian.safetrade.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.metadata.FixedMetadataValue;
 
 import java.util.*;
 
@@ -132,11 +134,11 @@ public class Trade {
                     for (int slot : InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY) {
                         ItemStack stack = tradingInventories[0].getItem(slot);
                         if (stack != null) {
-                            player1.getInventory().addItem(stack);
+                            giveItem(player1, stack);
                         }
                         stack = tradingInventories[1].getItem(slot);
                         if (stack != null) {
-                            player2.getInventory().addItem(stack);
+                            giveItem(player2, stack);
                         }
                     }
                     if (economy.getMoney(player1) < offeredMoney[0]) {
@@ -155,11 +157,11 @@ public class Trade {
                     InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
                 ItemStack stack = tradingInventories[0].getItem(slot);
                 if (stack != null) {
-                    player2.getInventory().addItem(stack); // the same as abort but with swapped players :)
+                    giveItem(player2, stack); // the same as abort but with swapped players :)
                 }
                 stack = tradingInventories[1].getItem(slot);
                 if (stack != null) {
-                    player1.getInventory().addItem(stack);
+                    giveItem(player1, stack);
                 }
             }
 
@@ -205,11 +207,11 @@ public class Trade {
                 InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
             ItemStack stack = tradingInventories[0].getItem(slot);
             if (stack != null) {
-                player1.getInventory().addItem(stack);
+                giveItem(player1, stack);
             }
             stack = tradingInventories[1].getItem(slot);
             if (stack != null) {
-                player2.getInventory().addItem(stack);
+                giveItem(player2, stack);
             }
         }
 
@@ -416,6 +418,22 @@ public class Trade {
             }
         }
         return Arrays.asList();
+    }
+
+    /**
+     * Gives a player his item. If the player has not enough space the item is dropped on the ground.
+     *
+     * @param player The player.
+     * @param stack The stack.
+     */
+    private void giveItem(Player player, ItemStack stack) {
+        HashMap<Integer, ItemStack> notFitting = player.getInventory().addItem(stack);
+        for (ItemStack is : notFitting.values()) {
+            Item item = player.getWorld().dropItem(player.getLocation(), is);
+            // Add a metadata tag for the dropped item (it's used to identify the "owner" of the item)
+            item.setMetadata("drop_timestamp", new FixedMetadataValue(Main.getInstance(), System.currentTimeMillis()));
+            item.setMetadata("item_owner", new FixedMetadataValue(Main.getInstance(), player.getName()));
+        }
     }
 
     /**
