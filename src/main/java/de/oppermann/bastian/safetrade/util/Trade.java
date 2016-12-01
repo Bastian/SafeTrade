@@ -345,9 +345,9 @@ public class Trade {
      *
      * @param player       The player
      * @param increaseType The increase type.
-     *                     <p><code>0</code> = Increase or decrease by 1.
-     *                     <p><code>1</code> = Increase or decrease by 10.
-     *                     <p><code>2</code> = Increase or decrease by 100.
+     *                     <p><code>0</code> = Increase or decrease by 'smallMoneyValue'.
+     *                     <p><code>1</code> = Increase or decrease by 'mediumMoneyValue'.
+     *                     <p><code>2</code> = Increase or decrease by 'largeMoneyValue'.
      *                     <p><code>3</code> = Set money to 0.
      * @param increase     Whether the money should be added or removed.
      */
@@ -359,13 +359,13 @@ public class Trade {
 
         switch (increaseType) {
             case 0:
-                offeredMoney[traderId] += 1 * (increase ? 1 : -1);
+                offeredMoney[traderId] += Main.getInstance().getConfig().getInt("smallMoneyValue") * (increase ? 1 : -1);
                 break;
             case 1:
-                offeredMoney[traderId] += 10 * (increase ? 1 : -1);
+                offeredMoney[traderId] += Main.getInstance().getConfig().getInt("mediumMoneyValue") * (increase ? 1 : -1);
                 break;
             case 2:
-                offeredMoney[traderId] += 100 * (increase ? 1 : -1);
+                offeredMoney[traderId] += Main.getInstance().getConfig().getInt("largeMoneyValue") * (increase ? 1 : -1);
                 break;
             default:
                 offeredMoney[traderId] = 0;
@@ -386,9 +386,9 @@ public class Trade {
      *
      * @param player       The player.
      * @param increaseType The increase type.
-     *                     <p><code>0</code> = Increase or decrease by 1.
-     *                     <p><code>1</code> = Increase or decrease by 10.
-     *                     <p><code>2</code> = Increase or decrease by 100.
+     *                     <p><code>0</code> = Increase or decrease by 'smallMoneyValue'.
+     *                     <p><code>1</code> = Increase or decrease by 'mediumMoneyValue'.
+     *                     <p><code>2</code> = Increase or decrease by 'largeMoneyValue'.
      *                     <p><code>3</code> = Set money to 0.
      * @return The slots to click at.
      */

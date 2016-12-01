@@ -48,3 +48,9 @@ tradeThroughWorlds: false
 # other player while sneaking?                                       #
 ######################################################################
 fastTrade: false
+######################################################################
+# The values used for the "Adds/Removes xyz money" buttons.          #
+######################################################################
+smallMoneyValue: 1
+mediumMoneyValue: 10
+largeMoneyValue: 100
