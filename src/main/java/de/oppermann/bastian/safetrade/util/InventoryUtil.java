@@ -198,14 +198,14 @@ public class InventoryUtil {
             for (int i = 0; i < readyLore.length; i++) {
                 readyLore[i] = ChatColor.GRAY + readyLore[i];
             }
-            ItemStack readyButton = createItemStack(Material.WOOL, (byte) DyeColor.LIME.getData(),
+            ItemStack readyButton = createItemStack(Material.WOOL, (byte) 5, // 5 = lime
                     ChatColor.DARK_GREEN + messages.getString("button_ready"), readyLore);
 
             String[] abortLore = messages.getString("button_abort_description").split("\n");
             for (int i = 0; i < abortLore.length; i++) {
                 abortLore[i] = ChatColor.GRAY + abortLore[i];
             }
-            ItemStack abortButton = createItemStack(Material.WOOL, DyeColor.RED.getData(),
+            ItemStack abortButton = createItemStack(Material.WOOL, (byte) 14, // 14 = red
                     ChatColor.RED + messages.getString("button_abort"), abortLore);
 
             String[] addMoneyLore = messages.getString("button_add_money_description").split("\n");
@@ -252,7 +252,7 @@ public class InventoryUtil {
             inventory.setItem(9 * 5 + 3, abortButton);
         }
         if (type == 1) {
-            ItemStack waitingForPartner = createItemStack(Material.STAINED_GLASS_PANE, DyeColor.LIME.getData(),
+            ItemStack waitingForPartner = createItemStack(Material.STAINED_GLASS_PANE, (byte) 5, // 5 = lime
                     ChatColor.GREEN + messages.getString("ready_and_wait_for_partner"));
             for (int i = 0; i < 4; i++) {
                 inventory.setItem(9 * 4 + i, waitingForPartner);
@@ -264,14 +264,14 @@ public class InventoryUtil {
             for (int i = 0; i < acceptLore.length; i++) {
                 acceptLore[i] = ChatColor.GRAY + acceptLore[i];
             }
-            ItemStack acceptButton = createItemStack(Material.WOOL, DyeColor.LIME.getData(),
+            ItemStack acceptButton = createItemStack(Material.WOOL, (byte) 5, // 5 = lime
                     ChatColor.DARK_GREEN + messages.getString("button_accept"), acceptLore);
 
             String[] abortLore = messages.getString("button_abort_description").split("\n");
             for (int i = 0; i < abortLore.length; i++) {
                 abortLore[i] = ChatColor.GRAY + abortLore[i];
             }
-            ItemStack abortButton = createItemStack(Material.WOOL, DyeColor.RED.getData(),
+            ItemStack abortButton = createItemStack(Material.WOOL, (byte) 14, // 14 = red
                     ChatColor.RED + messages.getString("button_abort"), abortLore);
 
             inventory.setItem(9 * 4 + 0, acceptButton);
@@ -284,7 +284,7 @@ public class InventoryUtil {
             inventory.setItem(9 * 5 + 3, abortButton);
         }
         if (type == 3) {
-            ItemStack waitingForPartner = createItemStack(Material.STAINED_GLASS_PANE, DyeColor.LIME.getData(),
+            ItemStack waitingForPartner = createItemStack(Material.STAINED_GLASS_PANE, (byte) 5, // 5 = lime
                     ChatColor.GREEN + messages.getString("accepted_and_wait_for_partner"));
             for (int i = 0; i < 4; i++) {
                 inventory.setItem(9 * 4 + i, waitingForPartner);
