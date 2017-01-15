@@ -96,13 +96,13 @@ public class InventoryUtil {
         title = title.length() > 32 ? title.substring(0, 32) : title;
         Inventory defaultTradeInventory = Bukkit.createInventory(null, 9 * 6, title);
 
-        ItemStack seperateStack = createItemStack(Material.IRON_FENCE, (byte) 0, ChatColor.GOLD.toString());
+        ItemStack separateStack = createItemStack(Material.IRON_FENCE, (byte) 0, ChatColor.GOLD.toString());
 
         for (int i = 0; i < 6; i++) {
-            defaultTradeInventory.setItem(9 * i + 4, seperateStack.clone());
+            defaultTradeInventory.setItem(9 * i + 4, separateStack.clone());
         }
         for (int i = 0; i < 9; i++) {
-            defaultTradeInventory.setItem(9 * 3 + i, seperateStack.clone());
+            defaultTradeInventory.setItem(9 * 3 + i, separateStack.clone());
         }
 
         setPartnerStatus(defaultTradeInventory, false, ChatColor.RED + messages.getString("partner_not_ready"));
