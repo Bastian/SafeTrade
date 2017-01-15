@@ -69,8 +69,8 @@ public class Trade {
         traders[0] = player1.getUniqueId();
         traders[1] = player2.getUniqueId();
 
-        tradingInventories[0] = InventoryUtil.createInventory(economy != null);
-        tradingInventories[1] = InventoryUtil.createInventory(economy != null);
+        tradingInventories[0] = InventoryUtil.createInventory(economy != null, player1, player2);
+        tradingInventories[1] = InventoryUtil.createInventory(economy != null, player2, player1);
 
         if (getTradeOf(player1) != null || getTradeOf(player2) != null) {
             throw new IllegalStateException("One player (or both) is already trading with someone!");

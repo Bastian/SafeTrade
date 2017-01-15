@@ -4,9 +4,9 @@ import com.google.common.collect.Lists;
 import de.oppermann.bastian.safetrade.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -73,20 +73,26 @@ public class InventoryUtil {
     /**
      * Creates a new trading inventory.
      *
+     * @param player The inventory holder.
+     * @param partner The trading partner.
      * @return A new trading inventory.
      */
-    public static Inventory createInventory() {
-        return createInventory(false);
+    public static Inventory createInventory(Player player, Player partner) {
+        return createInventory(false, player, partner);
     }
 
     /**
      * Creates a new trading inventory.
      *
      * @param tradeWithMoney Should it be allowed to trade with money?
+     * @param player The inventory holder.
+     * @param partner The trading partner.
      * @return A new trading inventory.
      */
-    public static Inventory createInventory(boolean tradeWithMoney) {
+    public static Inventory createInventory(boolean tradeWithMoney, Player player, Player partner) {
         String title = messages.getString("tradinginventory_title");
+        title = title.replace("{player}", player.getName());
+        title = title.replace("{partner}", partner.getName());
         title = title.length() > 32 ? title.substring(0, 32) : title;
         Inventory defaultTradeInventory = Bukkit.createInventory(null, 9 * 6, title);
 
