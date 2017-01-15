@@ -128,8 +128,10 @@ public class Trade {
             player1.closeInventory();
             player2.closeInventory(); // I think it's safer to close the inventories BEFORE giving them their items
 
-            if (economy != null && (economy.getMoney(player1) < offeredMoney[0] ||
-                    economy.getMoney(player2) < offeredMoney[1])) { // If a player hasn't enough money.
+            if (economy != null && (
+               (economy.getMoney(player1) < offeredMoney[0] && offeredMoney[0] != 0) ||
+               (economy.getMoney(player2) < offeredMoney[1] && offeredMoney[1] != 0))
+            ) { // If a player hasn't enough money.
                 if (Main.getInstance().getConfig().getBoolean("noDebts", true)) {
                     for (int slot : InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY) {
                         ItemStack stack = tradingInventories[0].getItem(slot);
@@ -141,7 +143,7 @@ public class Trade {
                             giveItem(player2, stack);
                         }
                     }
-                    if (economy.getMoney(player1) < offeredMoney[0]) {
+                    if (economy.getMoney(player1) < offeredMoney[0] && offeredMoney[0] != 0) {
                         player1.sendMessage(ChatColor.RED + messages.getString("not_enough_money_you"));
                         player2.sendMessage(ChatColor.RED + messages.getString("not_enough_money_partner")
                                 .replace("{player}", player1.getName()));
