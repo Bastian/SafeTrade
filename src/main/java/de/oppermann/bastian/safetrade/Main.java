@@ -5,6 +5,7 @@ import de.oppermann.bastian.safetrade.commands.TradeTabCompleter;
 import de.oppermann.bastian.safetrade.listener.*;
 import de.oppermann.bastian.safetrade.util.*;
 import net.milkbowl.vault.economy.Economy;
+import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
