@@ -138,6 +138,7 @@ public class TradeCommand implements CommandExecutor {
             // reload
             Main.getInstance().reload();
             player.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("reload_successful"));
+            return true;
         }
 
         // request a trade
