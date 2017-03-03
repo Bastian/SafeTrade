@@ -353,7 +353,7 @@ public class Main extends JavaPlugin {
      */
     public void reload() {
         this.reloadConfig();
-        // TODO reload .properties files.
+        this.loadConfiguration();
     }
 
     /**

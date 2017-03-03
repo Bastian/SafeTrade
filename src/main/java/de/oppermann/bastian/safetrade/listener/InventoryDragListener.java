@@ -21,11 +21,6 @@ import java.util.ResourceBundle;
 public class InventoryDragListener implements Listener {
 
     /**
-     * The {@link ResourceBundle} which contains all messages.
-     */
-    private ResourceBundle messages = Main.getInstance().getMessages();
-
-    /**
      * This is called automatically by Bukkit.
      *
      * @param event The event.
@@ -35,7 +30,7 @@ public class InventoryDragListener implements Listener {
         if (event.getWhoClicked().getOpenInventory() == null) {
             return;
         }
-        String title = messages.getString("tradinginventory_title");
+        String title = Main.getInstance().getMessages().getString("tradinginventory_title");
         title = title.length() > 32 ? title.substring(0, 32) : title;
         if (event.getWhoClicked().getOpenInventory().getTitle().equals(title)) {
             Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());

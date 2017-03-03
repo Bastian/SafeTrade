@@ -23,11 +23,6 @@ import java.util.ResourceBundle;
 public class InventoryUtil {
 
     /**
-     * The {@link ResourceBundle} which contains all messages.
-     */
-    private static ResourceBundle messages = Main.getInstance().getMessages();
-
-    /**
      * All allowed slots to place/move/etc. items.
      */
     public final static List<Integer> TRADING_SLOTS_LEFT_WITH_MONEY = Collections.unmodifiableList(
@@ -90,7 +85,7 @@ public class InventoryUtil {
      * @return A new trading inventory.
      */
     public static Inventory createInventory(boolean tradeWithMoney, Player player, Player partner) {
-        String title = messages.getString("tradinginventory_title");
+        String title = Main.getInstance().getMessages().getString("tradinginventory_title");
         title = title.replace("{player}", player.getName());
         title = title.replace("{partner}", partner.getName());
         title = title.length() > 32 ? title.substring(0, 32) : title;
@@ -105,7 +100,8 @@ public class InventoryUtil {
             defaultTradeInventory.setItem(9 * 3 + i, separateStack.clone());
         }
 
-        setPartnerStatus(defaultTradeInventory, false, ChatColor.RED + messages.getString("partner_not_ready"));
+        setPartnerStatus(defaultTradeInventory, false, ChatColor.RED +
+                Main.getInstance().getMessages().getString("partner_not_ready"));
 
 
         if (tradeWithMoney) {
@@ -176,7 +172,8 @@ public class InventoryUtil {
         if (Main.getInstance().getEconomy() != null) {
             strMoney = Main.getInstance().getEconomy().format(money);
         }
-        ItemStack itemStack = createItemStack(type, (byte) 0, messages.getString("offered_money").replace("{money}", strMoney));
+        ItemStack itemStack = createItemStack(type, (byte) 0,
+                Main.getInstance().getMessages().getString("offered_money").replace("{money}", strMoney));
         if (type != Material.BARRIER) {
             ItemMeta itemMeta = itemStack.getItemMeta();
             itemMeta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
@@ -200,21 +197,21 @@ public class InventoryUtil {
     @SuppressWarnings("deprecation") // screw you Mojang!
     public static void setOwnControlField(Inventory inventory, byte type, boolean tradeWithMoney) {
         if (type == 0) {
-            String[] readyLore = messages.getString("button_ready_description").split("\n");
+            String[] readyLore = Main.getInstance().getMessages().getString("button_ready_description").split("\n");
             for (int i = 0; i < readyLore.length; i++) {
                 readyLore[i] = ChatColor.GRAY + readyLore[i];
             }
             ItemStack readyButton = createItemStack(Material.WOOL, (byte) 5, // 5 = lime
-                    ChatColor.DARK_GREEN + messages.getString("button_ready"), readyLore);
+                    ChatColor.DARK_GREEN + Main.getInstance().getMessages().getString("button_ready"), readyLore);
 
-            String[] abortLore = messages.getString("button_abort_description").split("\n");
+            String[] abortLore = Main.getInstance().getMessages().getString("button_abort_description").split("\n");
             for (int i = 0; i < abortLore.length; i++) {
                 abortLore[i] = ChatColor.GRAY + abortLore[i];
             }
             ItemStack abortButton = createItemStack(Material.WOOL, (byte) 14, // 14 = red
-                    ChatColor.RED + messages.getString("button_abort"), abortLore);
+                    ChatColor.RED + Main.getInstance().getMessages().getString("button_abort"), abortLore);
 
-            String[] addMoneyLore = messages.getString("button_add_money_description").split("\n");
+            String[] addMoneyLore = Main.getInstance().getMessages().getString("button_add_money_description").split("\n");
             for (int i = 0; i < addMoneyLore.length; i++) {
                 addMoneyLore[i] = ChatColor.GRAY + addMoneyLore[i];
             }
@@ -224,29 +221,29 @@ public class InventoryUtil {
                 strMoney = Main.getInstance().getEconomy().format(Main.getInstance().getConfig().getInt("smallMoneyValue"));
             }
 
-            ItemStack addOneMoney = createItemStack(Material.GOLD_NUGGET, (byte) 0,
-                    ChatColor.GOLD + messages.getString("button_add_money").replace("{money}", strMoney), addMoneyLore);
+            ItemStack addOneMoney = createItemStack(Material.GOLD_NUGGET, (byte) 0, ChatColor.GOLD +
+                    Main.getInstance().getMessages().getString("button_add_money").replace("{money}", strMoney), addMoneyLore);
 
             strMoney = String.valueOf(Main.getInstance().getConfig().getInt("mediumMoneyValue"));
             if (Main.getInstance().getEconomy() != null) {
                 strMoney = Main.getInstance().getEconomy().format(Main.getInstance().getConfig().getInt("mediumMoneyValue"));
             }
-            ItemStack addTenMoney = createItemStack(Material.GOLD_INGOT, (byte) 0,
-                    ChatColor.GOLD + messages.getString("button_add_money").replace("{money}", strMoney), addMoneyLore);
+            ItemStack addTenMoney = createItemStack(Material.GOLD_INGOT, (byte) 0, ChatColor.GOLD +
+                    Main.getInstance().getMessages().getString("button_add_money").replace("{money}", strMoney), addMoneyLore);
 
             strMoney = String.valueOf(Main.getInstance().getConfig().getInt("largeMoneyValue"));
             if (Main.getInstance().getEconomy() != null) {
                 strMoney = Main.getInstance().getEconomy().format(Main.getInstance().getConfig().getInt("largeMoneyValue"));
             }
-            ItemStack addHundredMoney = createItemStack(Material.GOLD_BLOCK, (byte) 0,
-                    ChatColor.GOLD + messages.getString("button_add_money").replace("{money}", strMoney), addMoneyLore);
+            ItemStack addHundredMoney = createItemStack(Material.GOLD_BLOCK, (byte) 0, ChatColor.GOLD +
+                            Main.getInstance().getMessages().getString("button_add_money").replace("{money}", strMoney), addMoneyLore);
 
-            String[] clearMoneyLore = messages.getString("button_clear_money_description").split("\n");
+            String[] clearMoneyLore = Main.getInstance().getMessages().getString("button_clear_money_description").split("\n");
             for (int i = 0; i < clearMoneyLore.length; i++) {
                 clearMoneyLore[i] = ChatColor.GRAY + clearMoneyLore[i];
             }
             ItemStack clearMoney = createItemStack(Material.BARRIER, (byte) 0,
-                    ChatColor.RED + messages.getString("button_clear_money"), clearMoneyLore);
+                    ChatColor.RED + Main.getInstance().getMessages().getString("button_clear_money"), clearMoneyLore);
 
             inventory.setItem(9 * 4 + 0, tradeWithMoney ? addOneMoney : readyButton);
             inventory.setItem(9 * 4 + 1, tradeWithMoney ? addTenMoney : readyButton);
@@ -259,26 +256,26 @@ public class InventoryUtil {
         }
         if (type == 1) {
             ItemStack waitingForPartner = createItemStack(Material.STAINED_GLASS_PANE, (byte) 5, // 5 = lime
-                    ChatColor.GREEN + messages.getString("ready_and_wait_for_partner"));
+                    ChatColor.GREEN + Main.getInstance().getMessages().getString("ready_and_wait_for_partner"));
             for (int i = 0; i < 4; i++) {
                 inventory.setItem(9 * 4 + i, waitingForPartner);
                 inventory.setItem(9 * 5 + i, waitingForPartner);
             }
         }
         if (type == 2) {
-            String[] acceptLore = messages.getString("button_accept_description").split("\n");
+            String[] acceptLore = Main.getInstance().getMessages().getString("button_accept_description").split("\n");
             for (int i = 0; i < acceptLore.length; i++) {
                 acceptLore[i] = ChatColor.GRAY + acceptLore[i];
             }
             ItemStack acceptButton = createItemStack(Material.WOOL, (byte) 5, // 5 = lime
-                    ChatColor.DARK_GREEN + messages.getString("button_accept"), acceptLore);
+                    ChatColor.DARK_GREEN + Main.getInstance().getMessages().getString("button_accept"), acceptLore);
 
-            String[] abortLore = messages.getString("button_abort_description").split("\n");
+            String[] abortLore = Main.getInstance().getMessages().getString("button_abort_description").split("\n");
             for (int i = 0; i < abortLore.length; i++) {
                 abortLore[i] = ChatColor.GRAY + abortLore[i];
             }
             ItemStack abortButton = createItemStack(Material.WOOL, (byte) 14, // 14 = red
-                    ChatColor.RED + messages.getString("button_abort"), abortLore);
+                    ChatColor.RED + Main.getInstance().getMessages().getString("button_abort"), abortLore);
 
             inventory.setItem(9 * 4 + 0, acceptButton);
             inventory.setItem(9 * 4 + 1, acceptButton);
@@ -291,7 +288,7 @@ public class InventoryUtil {
         }
         if (type == 3) {
             ItemStack waitingForPartner = createItemStack(Material.STAINED_GLASS_PANE, (byte) 5, // 5 = lime
-                    ChatColor.GREEN + messages.getString("accepted_and_wait_for_partner"));
+                    ChatColor.GREEN + Main.getInstance().getMessages().getString("accepted_and_wait_for_partner"));
             for (int i = 0; i < 4; i++) {
                 inventory.setItem(9 * 4 + i, waitingForPartner);
                 inventory.setItem(9 * 5 + i, waitingForPartner);
