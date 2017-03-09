@@ -198,18 +198,6 @@ public class Main extends JavaPlugin {
             }
         });
 
-        // success rate pie
-        metrics.addCustomChart(new Metrics.AdvancedPie("trade_success_rate") {
-            @Override
-            public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-                valueMap.put("Aborted", abortedTrades);
-                valueMap.put("Succeeded", successfulTrades);
-                abortedTrades = 0;
-                successfulTrades = 0;
-                return valueMap;
-            }
-        });
-
         // Is Vault used?
         metrics.addCustomChart(new Metrics.SimplePie("vault_used") {
             @Override
