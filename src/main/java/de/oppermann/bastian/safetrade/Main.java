@@ -38,6 +38,16 @@ public class Main extends JavaPlugin {
     private ResourceBundle messages;
 
     /**
+     * The design of the trading inventory.
+     */
+    private Design design;
+
+    /**
+     * The inventory util.
+     */
+    private InventoryUtil inventoryUtil;
+
+    /**
      * The economy.
      */
     private IEconomy economy = null;
@@ -241,6 +251,12 @@ public class Main extends JavaPlugin {
      * Loads the configuration.
      */
     private void loadConfiguration() {
+        if (design == null) {
+            design = new Design(this);
+            inventoryUtil = new InventoryUtil(design);
+        } else {
+            design.reload();
+        }
         saveDefaultConfig();
         String strLocale = getConfig().getString("language");
         Locale locale;
@@ -385,6 +401,24 @@ public class Main extends JavaPlugin {
      */
     public ResourceBundle getMessages() {
         return messages;
+    }
+
+    /**
+     * Gets the design for the trading inventory.
+     *
+     * @return The design for the trading inventory.
+     */
+    public Design getDesign() {
+        return design;
+    }
+
+    /**
+     * Gets the inventory util used to create a trading inventory.
+     *
+     * @return The inventory util used to create a trading inventory.
+     */
+    public InventoryUtil getInventoryUtil() {
+        return inventoryUtil;
     }
 
     /**

@@ -1,0 +1,83 @@
+######################################################################
+######################################################################
+###           _____        __  _______            _                ###
+###          / ____|      / _||__   __|          | |               ###
+###         | (___   __ _| |_ ___| |_ __ __ _  __| | ___           ###
+###          \___ \ / _` |  _/ _ \ | '__/ _` |/ _` |/ _ \          ###
+###          ____) | (_| | ||  __/ | | | (_| | (_| |  __/          ###
+###         |_____/ \__,_|_| \___|_|_|  \__,_|\__,_|\___|          ###
+###                                           by BtoBastian        ###
+######################################################################
+######################################################################
+#              Design settings (materials in inventory)              #
+######################################################################
+# This file allows you to change the design of the trading inventory #
+# Format: Items are in the format "id" or "id:data".                 #
+#         A list with all ids and data values can be found in the    #
+#         wiki: http://minecraft.gamepedia.com/Data_values           #
+######################################################################
+######################################################################
+# The item which is used to seperate the right and left part of the  #
+# trading inventory.                                                 #
+# Default value: 101 (iron bars)                                     #
+######################################################################
+seperator: "101"
+######################################################################
+# The buttons which are used to add/remove money.                    #
+# Default values:                                                    #
+# small: 101 (gold nugget)                                           #
+# medium: 266 (gold ingot)                                           #
+# large: 41 (gold block)                                             #
+# clear money: 166 (barrier)                                         #
+######################################################################
+smallMoney: "371"
+mediumMoney: "266"
+largeMoney: "41"
+clearMoney: "166"
+######################################################################
+# The icon which is used to show the amount of offered money.        #
+# Default values:                                                    #
+# small: 101 (gold nugget)                                           #
+# medium: 266 (gold ingot)                                           #
+# large: 41 (gold block)                                             #
+# very large: 264 (diamond)                                          #
+# very very large: 57 (diamond block)                                #
+# no money: 166 (barrier)                                            #
+######################################################################
+smallMoneyOffered: "371"
+mediumMoneyOffered: "266"
+largeMoneyOffered: "41"
+veryLargeMoneyOffered: "264"
+veryVeryLargeMoneyOffered: "57"
+noMoneyOffered: "166"
+######################################################################
+# The item which are used to accept or abort a trade                 #
+# Default values:                                                    #
+# mark as ready: 35:5 (lime wool)                                    #
+# accept trade: 35:5 (lime wool)                                     #
+# abort trade: 35:14 (red wool)                                      #
+######################################################################
+markAsReady: "35:5"
+acceptTrade: "35:5"
+abortTrade: "35:14"
+######################################################################
+# The item which shows if the partner is (not) ready/has accepted    #
+# Default values:                                                    #
+# partner ready: 351:10 (lime dye)                                   #
+# partner not ready: 351:8 (grey dye)                                #
+# partner accepted: 351:10 (lime dye)                                #
+# partner not accepted: 351:8 (grey dye)                             #
+######################################################################
+partnerReady: "351:10"
+partnerNotReady: "351:8"
+partnerAccepted: "351:10"
+partnerNotAccepted: "351:8"
+######################################################################
+# The item which shows when you ware ready (or have accepted) but    #
+# your partner is not ready (or has not accepted) yet.               #
+# Default values:                                                    #
+# ready and wait for partner: 160:5 (lime glass pane)                #
+# accepted and wait for partner: 160:5 (lime glass pane)             #
+######################################################################
+readyAndWaitForPartner: "160:5"
+acceptedAndWaitForPartner: "160:5"
