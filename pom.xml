@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.oppermann.bastian.safetrade</groupId>
     <artifactId>safetrade</artifactId>
-    <version>1.0.10-RELEASE</version>
+    <version>1.0.11</version>
     <build>
         <plugins>
             <plugin>
