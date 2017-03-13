@@ -93,6 +93,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryDragListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
