@@ -34,6 +34,18 @@ public class TradeCommand implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args[0].equalsIgnoreCase("reload")) { // reload the config
+            if (!sender.hasPermission("safetrade.reload")) {
+                sender.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("no_permission"));
+                return true;
+            }
+
+            // reload
+            Main.getInstance().reload();
+            sender.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("reload_successful"));
+            return true;
+        }
+
         if (!(sender instanceof Player)) {
             sender.sendMessage(Main.getInstance().getMessages().getString("players_only"));
             return true;
@@ -127,18 +139,6 @@ public class TradeCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("no_request_spam"));
                 return true;
             }
-        }
-
-        if (args[0].equalsIgnoreCase("reload")) { // reload the config
-            if (!player.hasPermission("safetrade.reload")) {
-                sender.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("no_permission"));
-                return true;
-            }
-
-            // reload
-            Main.getInstance().reload();
-            player.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("reload_successful"));
-            return true;
         }
 
         // request a trade
