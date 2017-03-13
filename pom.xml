@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>de.oppermann.bastian.safetrade</groupId>
     <artifactId>safetrade</artifactId>
-    <version>1.0.10-RELEASE</version>
+    <version>1.0.11</version>
     <build>
         <plugins>
             <plugin>
@@ -15,6 +15,32 @@
                     <target>1.7</target>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>2.3</version>
+                <configuration>
+                    <artifactSet>
+                        <includes>
+                            <include>org.bstats:*</include>
+                        </includes>
+                    </artifactSet>
+                    <relocations>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <shadedPattern>de.oppermann.bastian.safetrade.util</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
         </plugins>
     </build>
     <name>SafeTrade</name>
@@ -25,7 +51,11 @@
         </repository>
         <repository>
             <id>vault-repo</id>
-            <url>http://nexus.theyeticave.net/content/repositories/pub_releases</url>
+            <url>http://nexus.hc.to/content/repositories/pub_releases</url>
+        </repository>
+        <repository>
+            <id>bstats-repo</id>
+            <url>http://repo.bstats.org/content/repositories/releases/</url>
         </repository>
     </repositories>
     <dependencies>
@@ -40,7 +70,14 @@
         <dependency>
             <groupId>net.milkbowl.vault</groupId>
             <artifactId>VaultAPI</artifactId>
-            <version>1.5</version>
+            <version>1.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <!-- bStats -->
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>1.1</version>
         </dependency>
     </dependencies>
 </project>

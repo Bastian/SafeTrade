@@ -5,6 +5,7 @@ import de.oppermann.bastian.safetrade.commands.TradeTabCompleter;
 import de.oppermann.bastian.safetrade.listener.*;
 import de.oppermann.bastian.safetrade.util.*;
 import net.milkbowl.vault.economy.Economy;
+import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -35,6 +36,16 @@ public class Main extends JavaPlugin {
      * The {@link ResourceBundle} which contains all messages.
      */
     private ResourceBundle messages;
+
+    /**
+     * The design of the trading inventory.
+     */
+    private Design design;
+
+    /**
+     * The inventory util.
+     */
+    private InventoryUtil inventoryUtil;
 
     /**
      * The economy.
@@ -82,6 +93,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryDragListener(), this);
+        Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
@@ -197,18 +209,6 @@ public class Main extends JavaPlugin {
             }
         });
 
-        // success rate pie
-        metrics.addCustomChart(new Metrics.AdvancedPie("trade_success_rate") {
-            @Override
-            public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-                valueMap.put("Aborted", abortedTrades);
-                valueMap.put("Succeeded", successfulTrades);
-                abortedTrades = 0;
-                successfulTrades = 0;
-                return valueMap;
-            }
-        });
-
         // Is Vault used?
         metrics.addCustomChart(new Metrics.SimplePie("vault_used") {
             @Override
@@ -252,6 +252,12 @@ public class Main extends JavaPlugin {
      * Loads the configuration.
      */
     private void loadConfiguration() {
+        if (design == null) {
+            design = new Design(this);
+            inventoryUtil = new InventoryUtil(design);
+        } else {
+            design.reload();
+        }
         saveDefaultConfig();
         String strLocale = getConfig().getString("language");
         Locale locale;
@@ -323,6 +329,8 @@ public class Main extends JavaPlugin {
             FileUtils.copy(getResource("Messages_de.properties"), new File(languageFolder, "Messages_de.properties"));
             FileUtils.copy(getResource("Messages_es.properties"), new File(languageFolder, "Messages_es.properties"));
             FileUtils.copy(getResource("Messages_fr.properties"), new File(languageFolder, "Messages_fr.properties"));
+            FileUtils.copy(getResource("Messages_it.properties"), new File(languageFolder, "Messages_it.properties"));
+            FileUtils.copy(getResource("Messages_pl.properties"), new File(languageFolder, "Messages_pl.properties"));
             FileUtils.copy(getResource("Messages_ru.properties"), new File(languageFolder, "Messages_ru.properties"));
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Could not copy language resources to " + languageFolder.getPath(), e);
@@ -351,7 +359,7 @@ public class Main extends JavaPlugin {
      */
     public void reload() {
         this.reloadConfig();
-        // TODO reload .properties files.
+        this.loadConfiguration();
     }
 
     /**
@@ -395,6 +403,24 @@ public class Main extends JavaPlugin {
      */
     public ResourceBundle getMessages() {
         return messages;
+    }
+
+    /**
+     * Gets the design for the trading inventory.
+     *
+     * @return The design for the trading inventory.
+     */
+    public Design getDesign() {
+        return design;
+    }
+
+    /**
+     * Gets the inventory util used to create a trading inventory.
+     *
+     * @return The inventory util used to create a trading inventory.
+     */
+    public InventoryUtil getInventoryUtil() {
+        return inventoryUtil;
     }
 
     /**

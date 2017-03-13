@@ -17,11 +17,6 @@ import java.util.*;
 public class Trade {
 
     /**
-     * The {@link ResourceBundle} which contains all messages.
-     */
-    private static ResourceBundle messages = Main.getInstance().getMessages();
-
-    /**
      * A list which includes all active trades.
      */
     private static final List<Trade> activeTrades = new ArrayList<>();
@@ -69,8 +64,8 @@ public class Trade {
         traders[0] = player1.getUniqueId();
         traders[1] = player2.getUniqueId();
 
-        tradingInventories[0] = InventoryUtil.createInventory(economy != null);
-        tradingInventories[1] = InventoryUtil.createInventory(economy != null);
+        tradingInventories[0] = Main.getInstance().getInventoryUtil().createInventory(economy != null, player1, player2);
+        tradingInventories[1] = Main.getInstance().getInventoryUtil().createInventory(economy != null, player2, player1);
 
         if (getTradeOf(player1) != null || getTradeOf(player2) != null) {
             throw new IllegalStateException("One player (or both) is already trading with someone!");
@@ -88,20 +83,22 @@ public class Trade {
      */
     public void approve(Player player) {
         // some kind of fail-safe if there was an error
-        InventoryUtil.synchronize(tradingInventories[0], tradingInventories[1], economy != null);
+        Main.getInstance().getInventoryUtil().synchronize(tradingInventories[0], tradingInventories[1], economy != null);
         // with the events/listener
-        InventoryUtil.synchronize(tradingInventories[1], tradingInventories[0], economy != null);
+        Main.getInstance().getInventoryUtil().synchronize(tradingInventories[1], tradingInventories[0], economy != null);
 
         if (traders[0].equals(player.getUniqueId())) {
             acceptedOrReady[0] = true;
-            InventoryUtil.setPartnerStatus(tradingInventories[1], true,
-                    ChatColor.GREEN + (!status ? messages.getString("partner_ready") : messages.getString("partner_accepted_trade")));
-            InventoryUtil.setOwnControlField(tradingInventories[0], status ? (byte) 3 : (byte) 1, economy != null);
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[1], true,
+                    ChatColor.GREEN + (!status ? Main.getInstance().getMessages().getString("partner_ready") :
+                            Main.getInstance().getMessages().getString("partner_accepted_trade")));
+            Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[0], status ? (byte) 3 : (byte) 1, economy != null);
         } else {
             acceptedOrReady[1] = true;
-            InventoryUtil.setPartnerStatus(tradingInventories[0], true,
-                    ChatColor.GREEN + (!status ? messages.getString("partner_ready") : messages.getString("partner_accepted_trade")));
-            InventoryUtil.setOwnControlField(tradingInventories[1], status ? (byte) 3 : (byte) 1, economy != null);
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[0], true,
+                    ChatColor.GREEN + (!status ? Main.getInstance().getMessages().getString("partner_ready") :
+                            Main.getInstance().getMessages().getString("partner_accepted_trade")));
+            Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[1], status ? (byte) 3 : (byte) 1, economy != null);
         }
         Bukkit.getPlayer(traders[0]).updateInventory();
         Bukkit.getPlayer(traders[1]).updateInventory();
@@ -109,12 +106,12 @@ public class Trade {
             status = true; // next step! Now they are both ready and must accept the trade :)
             acceptedOrReady[0] = false;
             acceptedOrReady[1] = false;
-            InventoryUtil.setPartnerStatus(tradingInventories[0], false,
-                    ChatColor.RED + messages.getString("partner_not_accepted_yet"));
-            InventoryUtil.setPartnerStatus(tradingInventories[1], false,
-                    ChatColor.RED + messages.getString("partner_not_accepted_yet"));
-            InventoryUtil.setOwnControlField(tradingInventories[0], (byte) 2, economy != null);
-            InventoryUtil.setOwnControlField(tradingInventories[1], (byte) 2, economy != null);
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[0], false,
+                    ChatColor.RED + Main.getInstance().getMessages().getString("partner_not_accepted_yet"));
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[1], false,
+                    ChatColor.RED + Main.getInstance().getMessages().getString("partner_not_accepted_yet"));
+            Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[0], (byte) 2, economy != null);
+            Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[1], (byte) 2, economy != null);
             Bukkit.getPlayer(traders[0]).updateInventory();
             Bukkit.getPlayer(traders[1]).updateInventory();
         }
@@ -128,10 +125,12 @@ public class Trade {
             player1.closeInventory();
             player2.closeInventory(); // I think it's safer to close the inventories BEFORE giving them their items
 
-            if (economy != null && (economy.getMoney(player1) < offeredMoney[0] ||
-                    economy.getMoney(player2) < offeredMoney[1])) { // If a player hasn't enough money.
+            if (economy != null && (
+               (economy.getMoney(player1) < offeredMoney[0] && offeredMoney[0] != 0) ||
+               (economy.getMoney(player2) < offeredMoney[1] && offeredMoney[1] != 0))
+            ) { // If a player hasn't enough money.
                 if (Main.getInstance().getConfig().getBoolean("noDebts", true)) {
-                    for (int slot : InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY) {
+                    for (int slot : Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITH_MONEY) {
                         ItemStack stack = tradingInventories[0].getItem(slot);
                         if (stack != null) {
                             giveItem(player1, stack);
@@ -141,20 +140,20 @@ public class Trade {
                             giveItem(player2, stack);
                         }
                     }
-                    if (economy.getMoney(player1) < offeredMoney[0]) {
-                        player1.sendMessage(ChatColor.RED + messages.getString("not_enough_money_you"));
-                        player2.sendMessage(ChatColor.RED + messages.getString("not_enough_money_partner")
+                    if (economy.getMoney(player1) < offeredMoney[0] && offeredMoney[0] != 0) {
+                        player1.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("not_enough_money_you"));
+                        player2.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("not_enough_money_partner")
                                 .replace("{player}", player1.getName()));
                     } else {
-                        player2.sendMessage(ChatColor.RED + messages.getString("not_enough_money_you"));
-                        player1.sendMessage(ChatColor.RED + messages.getString("not_enough_money_partner")
+                        player2.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("not_enough_money_you"));
+                        player1.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("not_enough_money_partner")
                                 .replace("{player}", player2.getName()));
                     }
                     return;
                 }
             }
             for (int slot : economy != null ?
-                    InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
+                    Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITH_MONEY : Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
                 ItemStack stack = tradingInventories[0].getItem(slot);
                 if (stack != null) {
                     giveItem(player2, stack); // the same as abort but with swapped players :)
@@ -176,8 +175,8 @@ public class Trade {
                 }
             }
 
-            player1.sendMessage(ChatColor.GREEN + messages.getString("trade_succeeded"));
-            player2.sendMessage(ChatColor.GREEN + messages.getString("trade_succeeded"));
+            player1.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("trade_succeeded"));
+            player2.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("trade_succeeded"));
 
             Main.getInstance().incrementSuccessfulTrades();
         }
@@ -204,7 +203,7 @@ public class Trade {
         player2.closeInventory(); // I think it's safer to close the inventories BEFORE giving them back their items
 
         for (int slot : economy != null ?
-                InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
+                Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITH_MONEY : Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
             ItemStack stack = tradingInventories[0].getItem(slot);
             if (stack != null) {
                 giveItem(player1, stack);
@@ -216,11 +215,13 @@ public class Trade {
         }
 
         if (whoAborted != null && player1.equals(whoAborted)) {
-            player2.sendMessage(ChatColor.RED + messages.getString("player_aborted_trade").replace("{player}", whoAborted.getName()));
-            player1.sendMessage(ChatColor.RED + messages.getString("you_aborted_trade"));
+            player2.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("player_aborted_trade")
+                    .replace("{player}", whoAborted.getName()));
+            player1.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("you_aborted_trade"));
         } else if (whoAborted != null) {
-            player1.sendMessage(ChatColor.RED + messages.getString("player_aborted_trade").replace("{player}", whoAborted.getName()));
-            player2.sendMessage(ChatColor.RED + messages.getString("you_aborted_trade"));
+            player1.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("player_aborted_trade")
+                    .replace("{player}", whoAborted.getName()));
+            player2.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("you_aborted_trade"));
         }
         Main.getInstance().incrementAbortedTrades();
     }
@@ -375,8 +376,8 @@ public class Trade {
             offeredMoney[traderId] = 0;
         }
 
-        InventoryUtil.setMoney(tradingInventories[traderId], offeredMoney[traderId], true);
-        InventoryUtil.setMoney(tradingInventories[traderId == 0 ? 1 : 0], offeredMoney[traderId], false);
+        Main.getInstance().getInventoryUtil().setMoney(tradingInventories[traderId], offeredMoney[traderId], true);
+        Main.getInstance().getInventoryUtil().setMoney(tradingInventories[traderId == 0 ? 1 : 0], offeredMoney[traderId], false);
         Bukkit.getPlayer(traders[0]).updateInventory();
         Bukkit.getPlayer(traders[1]).updateInventory();
     }

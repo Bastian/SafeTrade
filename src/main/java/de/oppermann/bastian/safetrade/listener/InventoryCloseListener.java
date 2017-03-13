@@ -15,18 +15,13 @@ import java.util.ResourceBundle;
 public class InventoryCloseListener implements Listener {
 
     /**
-     * The {@link ResourceBundle} which contains all messages.
-     */
-    private ResourceBundle messages = Main.getInstance().getMessages();
-
-    /**
      * This is called automatically by bukkit.
      *
      * @param event The event.
      */
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        String title = messages.getString("tradinginventory_title");
+        String title = Main.getInstance().getMessages().getString("tradinginventory_title");
         title = title.length() > 32 ? title.substring(0, 32) : title;
         if (event.getInventory().getName().equals(title)) {
             Trade trade = Trade.getTradeOf((Player) event.getPlayer());
