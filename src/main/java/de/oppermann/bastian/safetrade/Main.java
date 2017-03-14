@@ -252,13 +252,13 @@ public class Main extends JavaPlugin {
      * Loads the configuration.
      */
     private void loadConfiguration() {
+        saveDefaultConfig();
         if (design == null) {
             design = new Design(this);
             inventoryUtil = new InventoryUtil(design);
         } else {
             design.reload();
         }
-        saveDefaultConfig();
         String strLocale = getConfig().getString("language");
         Locale locale;
         if (strLocale == null || strLocale.equals("auto")) {

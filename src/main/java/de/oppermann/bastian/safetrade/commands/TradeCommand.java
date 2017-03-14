@@ -34,6 +34,12 @@ public class TradeCommand implements CommandExecutor {
      */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+        if (args.length != 1) {
+            sender.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("wrong_usage").replace("{command}",
+                    ChatColor.GOLD + "/trade help" + ChatColor.RED));
+            return true;
+        }
+
         if (args[0].equalsIgnoreCase("reload")) { // reload the config
             if (!sender.hasPermission("safetrade.reload")) {
                 sender.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("no_permission"));
@@ -56,12 +62,6 @@ public class TradeCommand implements CommandExecutor {
                 && !player.hasPermission("safetrade.accept")
                 && !player.hasPermission("safetrade.deny")) {
             sender.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("no_permission"));
-            return true;
-        }
-
-        if (args.length != 1) {
-            player.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("wrong_usage").replace("{command}",
-                    ChatColor.GOLD + "/trade help" + ChatColor.RED));
             return true;
         }
 
