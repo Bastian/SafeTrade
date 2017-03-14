@@ -148,6 +148,12 @@ public class TradeCommand implements CommandExecutor {
             return true;
         }
 
+        // Don't allow trades with hidden players
+        if (!(player.canSee(target) || Main.getInstance().getConfig().getBoolean("tradeWithHiddenPlayers"))) {
+            player.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("player_not_online").replace("{player}", args[0]));
+            return true;
+        }
+
         if (target.getUniqueId().equals(player.getUniqueId())) {
             player.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("cannot_trade_with_yourself"));
             return true;
