@@ -26,6 +26,11 @@ public class TradeTabCompleter implements TabCompleter {
             list.add("reload");
             for (Player player : Bukkit.getOnlinePlayers()) { // add all online players
                 if (!sender.equals(player)) { // except the player itself
+                    if (sender instanceof Player) {
+                        if (!((Player) sender).canSee(player)) {
+                            continue;
+                        }
+                    }
                     list.add(player.getName());
                 }
             }
