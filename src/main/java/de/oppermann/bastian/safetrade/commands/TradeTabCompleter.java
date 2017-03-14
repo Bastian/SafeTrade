@@ -23,6 +23,7 @@ public class TradeTabCompleter implements TabCompleter {
             list.add("accept");
             list.add("deny");
             list.add("help");
+            list.add("reload");
             for (Player player : Bukkit.getOnlinePlayers()) { // add all online players
                 if (!sender.equals(player)) { // except the player itself
                     list.add(player.getName());
