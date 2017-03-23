@@ -30,43 +30,39 @@ public class InventoryDragListener implements Listener {
         if (event.getWhoClicked().getOpenInventory() == null) {
             return;
         }
-        String title = Main.getInstance().getMessages().getString("tradinginventory_title");
-        title = title.length() > 32 ? title.substring(0, 32) : title;
-        if (event.getWhoClicked().getOpenInventory().getTitle().equals(title)) {
-            Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
-            if (trade == null) {
-                return;
-            }
+        Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
+        if (trade == null) {
+            return;
+        }
 
-            List<Integer> allowedSlots = trade.getCurrentAllowedSlots(event.getWhoClicked().getUniqueId());
-            for (int slot : event.getRawSlots()) {
-                if (!allowedSlots.contains(slot)) {
-                    event.setCancelled(true);
-                    return;
-                }
-            }
-
-            if (trade.isReadyOrHasAccepted(event.getWhoClicked().getUniqueId())) {
+        List<Integer> allowedSlots = trade.getCurrentAllowedSlots(event.getWhoClicked().getUniqueId());
+        for (int slot : event.getRawSlots()) {
+            if (!allowedSlots.contains(slot)) {
                 event.setCancelled(true);
                 return;
             }
-            final Inventory partnerInventory = trade.getInventoryOfPartner(event.getWhoClicked().getUniqueId());
-
-            for (Entry<Integer, ItemStack> entry : event.getNewItems().entrySet()) {
-                ItemStack toSet = entry.getValue().clone();
-                partnerInventory.setItem(entry.getKey() + 5, toSet);
-            }
-
-            Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
-
-                @Override
-                public void run() {
-                    for (HumanEntity player : partnerInventory.getViewers()) {
-                        ((Player) player).updateInventory();
-                    }
-                }
-            }, 1);
         }
+
+        if (trade.isReadyOrHasAccepted(event.getWhoClicked().getUniqueId())) {
+            event.setCancelled(true);
+            return;
+        }
+        final Inventory partnerInventory = trade.getInventoryOfPartner(event.getWhoClicked().getUniqueId());
+
+        for (Entry<Integer, ItemStack> entry : event.getNewItems().entrySet()) {
+            ItemStack toSet = entry.getValue().clone();
+            partnerInventory.setItem(entry.getKey() + 5, toSet);
+        }
+
+        Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
+
+            @Override
+            public void run() {
+                for (HumanEntity player : partnerInventory.getViewers()) {
+                    ((Player) player).updateInventory();
+                }
+            }
+        }, 1);
     }
 
 }
