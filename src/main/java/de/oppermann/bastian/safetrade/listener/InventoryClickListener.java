@@ -30,13 +30,11 @@ public class InventoryClickListener implements Listener {
         if (getClickedInventory(event) == null) {
             return;
         }
-        String title = Main.getInstance().getMessages().getString("tradinginventory_title");
-        title = title.length() > 32 ? title.substring(0, 32) : title;
-        if (getClickedInventory(event).getName().equals(title)) {
-            Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
-            if (trade == null) {
-                return;
-            }
+        Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
+        if (trade == null) {
+            return;
+        }
+        if (getClickedInventory(event) == event.getWhoClicked().getOpenInventory().getTopInventory()) {
             final Inventory partnerInventory = trade.getInventoryOfPartner(event.getWhoClicked().getUniqueId());
             if (trade.getCurrentAllowedSlots(event.getWhoClicked().getUniqueId()).contains(event.getRawSlot())) {
                 if (trade.isReadyOrHasAccepted(event.getWhoClicked().getUniqueId())) {
@@ -149,7 +147,7 @@ public class InventoryClickListener implements Listener {
                 }
                 event.setCancelled(true);
             }
-        } else if (event.getWhoClicked().getOpenInventory() != null && event.getWhoClicked().getOpenInventory().getTitle().equals(title)) {
+        } else {
             if (event.getAction() != InventoryAction.PICKUP_ALL &&
                     event.getAction() != InventoryAction.PICKUP_HALF &&
                     event.getAction() != InventoryAction.PICKUP_SOME &&

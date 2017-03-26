@@ -54,3 +54,9 @@ fastTrade: false
 smallMoneyValue: 1
 mediumMoneyValue: 10
 largeMoneyValue: 100
+######################################################################
+# Should it be able to request trades with hidden players?           #
+# If this option is set to false, the plugin shows the               #
+# "Player is not online" message for hidden players, too.            #
+######################################################################
+tradeWithHiddenPlayers: true

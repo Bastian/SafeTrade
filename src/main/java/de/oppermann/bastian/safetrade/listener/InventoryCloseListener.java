@@ -21,15 +21,11 @@ public class InventoryCloseListener implements Listener {
      */
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        String title = Main.getInstance().getMessages().getString("tradinginventory_title");
-        title = title.length() > 32 ? title.substring(0, 32) : title;
-        if (event.getInventory().getName().equals(title)) {
-            Trade trade = Trade.getTradeOf((Player) event.getPlayer());
-            if (trade == null) {
-                return;
-            }
-            trade.abort((Player) event.getPlayer());
+        Trade trade = Trade.getTradeOf((Player) event.getPlayer());
+        if (trade == null) {
+            return;
         }
+        trade.abort((Player) event.getPlayer());
     }
 
 }
