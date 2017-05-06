@@ -28,7 +28,7 @@ public class TradeSuccessEvent extends Event implements Cancellable {
     private boolean cancelled;
 
     /**
-     * Create a new trade scuess event.
+     * Create a new trade success event.
      *
      * @param player1         The first player of the trade.
      * @param player2         The second player of the trade.
