@@ -43,6 +43,11 @@ public class Main extends JavaPlugin {
     private Design design;
 
     /**
+     * The item blacklist.
+     */
+    private Blacklist blacklist;
+
+    /**
      * The inventory util.
      */
     private InventoryUtil inventoryUtil;
@@ -259,6 +264,11 @@ public class Main extends JavaPlugin {
         } else {
             design.reload();
         }
+        if (blacklist == null) {
+            blacklist = new Blacklist(this);
+        } else {
+            blacklist.reload();
+        }
         String strLocale = getConfig().getString("language");
         Locale locale;
         if (strLocale == null || strLocale.equals("auto")) {
@@ -412,6 +422,15 @@ public class Main extends JavaPlugin {
      */
     public Design getDesign() {
         return design;
+    }
+
+    /**
+     * Gets the item blacklist.
+     *
+     * @return The item blacklist.
+     */
+    public Blacklist getBlacklist() {
+        return blacklist;
     }
 
     /**

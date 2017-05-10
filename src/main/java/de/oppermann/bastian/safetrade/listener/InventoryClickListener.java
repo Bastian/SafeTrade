@@ -159,6 +159,12 @@ public class InventoryClickListener implements Listener {
                     event.getAction() != InventoryAction.SWAP_WITH_CURSOR) {
                 event.setCancelled(true);
             }
+
+            if (getClickedInventory(event) != null &&
+                Main.getInstance().getBlacklist().isBlacklisted(event.getCurrentItem()))
+            {
+                event.setCancelled(true);
+            }
         }
     }
 
