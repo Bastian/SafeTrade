@@ -13,11 +13,24 @@
 ######################################################################
 # This file allows you to prevent players from trading with          #
 # specific items.                                                    #
-# Format: Items are in the format "id" or "id:data".                 #
+######################################################################
+enabled: false
+######################################################################
+# Blocks items based on their id (and data value).                   #
+# Format: Ids are in the format "id" or "id:data".                   #
 #         A list with all ids and data values can be found in the    #
 #         wiki: http://minecraft.gamepedia.com/Data_values           #
 ######################################################################
-enabled: false
-blacklist:
+ids:
     - "171"   # Ban all types of colored carpets
     - "35:14" # Only ban red wool (but allow all other colors)
+######################################################################
+# Blocks items based on their disaply name.                          #
+######################################################################
+displayName:
+    - "Super cool item"
+######################################################################
+# Blocks items based on their lore.                                  #
+######################################################################
+lore:
+    - "This item is untradeable"

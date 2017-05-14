@@ -1,5 +1,6 @@
 package de.oppermann.bastian.safetrade.util;
 
+import org.bukkit.ChatColor;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.inventory.ItemStack;
@@ -55,7 +56,9 @@ public class Blacklist {
             // Always return false if blacklist is disabled
             return false;
         }
-        List<String> blacklistedItems = config.getStringList("blacklist");
+
+        // Blacklist based on id
+        List<String> blacklistedItems = config.getStringList("ids");
         for (String item : blacklistedItems) {
 
             String[] split = item.split(":");
@@ -73,6 +76,31 @@ public class Blacklist {
                     String.valueOf(itemToCheck.getData().getData()).equals(itemData))
                 {
                     return true;
+                }
+            }
+        }
+
+        // Blacklist based on disaply name
+        List<String> blacklistedDisplayNames = config.getStringList("displayName");
+        for (String displayName : blacklistedDisplayNames) {
+            if (itemToCheck.hasItemMeta() &&
+                itemToCheck.getItemMeta().hasDisplayName() &&
+                itemToCheck.getItemMeta().getDisplayName().equalsIgnoreCase(displayName))
+            {
+                return true;
+            }
+        }
+
+        // Blacklist based on lore
+        List<String> blacklistedLores = config.getStringList("lore");
+        for (String lore : blacklistedLores) {
+            lore = ChatColor.stripColor(lore);
+            if (itemToCheck.hasItemMeta() && itemToCheck.getItemMeta().hasLore()) {
+                for (String itemLore : itemToCheck.getItemMeta().getLore()) {
+                    itemLore = ChatColor.stripColor(itemLore);
+                    if (lore.equalsIgnoreCase(itemLore)) {
+                        return true;
+                    }
                 }
             }
         }
