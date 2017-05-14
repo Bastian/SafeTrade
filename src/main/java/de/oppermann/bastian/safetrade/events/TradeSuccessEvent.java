@@ -14,7 +14,7 @@ import java.util.List;
 public class TradeSuccessEvent extends Event implements Cancellable {
 
     // The handler list
-    private HandlerList handlerList = new HandlerList();
+    private static final HandlerList handlerList = new HandlerList();
 
     // The two players
     private Player player1, player2;
@@ -124,6 +124,15 @@ public class TradeSuccessEvent extends Event implements Cancellable {
 
     @Override
     public HandlerList getHandlers() {
+        return handlerList;
+    }
+
+    /**
+     * Bukkit really loves this method, so I wanted to do it a flavour and add it. <3
+     *
+     * @return Just kidding. Custom events don't work without this method, that's the reason.
+     */
+    public static HandlerList getHandlerList() {
         return handlerList;
     }
 
