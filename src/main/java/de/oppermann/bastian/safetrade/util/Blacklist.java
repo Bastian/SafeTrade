@@ -80,7 +80,7 @@ public class Blacklist {
             }
         }
 
-        // Blacklist based on disaply name
+        // Blacklist based on display name
         List<String> blacklistedDisplayNames = config.getStringList("displayName");
         for (String displayName : blacklistedDisplayNames) {
             if (itemToCheck.hasItemMeta() &&
