@@ -342,6 +342,7 @@ public class Main extends JavaPlugin {
             FileUtils.copy(getResource("Messages_it.properties"), new File(languageFolder, "Messages_it.properties"));
             FileUtils.copy(getResource("Messages_pl.properties"), new File(languageFolder, "Messages_pl.properties"));
             FileUtils.copy(getResource("Messages_ru.properties"), new File(languageFolder, "Messages_ru.properties"));
+            FileUtils.copy(getResource("Messages_zh.properties"), new File(languageFolder, "Messages_zh.properties"));
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Could not copy language resources to " + languageFolder.getPath(), e);
         }
