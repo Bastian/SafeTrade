@@ -19,6 +19,11 @@ public class Design {
     private final JavaPlugin plugin;
     private FileConfiguration config;
 
+    /**
+     * Creates a new Design object.
+     *
+     * @param plugin The SafeTrade plugin.
+     */
     public Design(JavaPlugin plugin) {
         this.plugin = plugin;
         File configFile = new File(plugin.getDataFolder(), "design.yml");

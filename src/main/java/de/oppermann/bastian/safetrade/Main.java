@@ -43,6 +43,11 @@ public class Main extends JavaPlugin {
     private Design design;
 
     /**
+     * The item blacklist.
+     */
+    private Blacklist blacklist;
+
+    /**
      * The inventory util.
      */
     private InventoryUtil inventoryUtil;
@@ -259,6 +264,11 @@ public class Main extends JavaPlugin {
         } else {
             design.reload();
         }
+        if (blacklist == null) {
+            blacklist = new Blacklist(this);
+        } else {
+            blacklist.reload();
+        }
         String strLocale = getConfig().getString("language");
         Locale locale;
         if (strLocale == null || strLocale.equals("auto")) {
@@ -332,6 +342,7 @@ public class Main extends JavaPlugin {
             FileUtils.copy(getResource("Messages_it.properties"), new File(languageFolder, "Messages_it.properties"));
             FileUtils.copy(getResource("Messages_pl.properties"), new File(languageFolder, "Messages_pl.properties"));
             FileUtils.copy(getResource("Messages_ru.properties"), new File(languageFolder, "Messages_ru.properties"));
+            FileUtils.copy(getResource("Messages_zh.properties"), new File(languageFolder, "Messages_zh.properties"));
         } catch (IOException e) {
             getLogger().log(Level.SEVERE, "Could not copy language resources to " + languageFolder.getPath(), e);
         }
@@ -412,6 +423,15 @@ public class Main extends JavaPlugin {
      */
     public Design getDesign() {
         return design;
+    }
+
+    /**
+     * Gets the item blacklist.
+     *
+     * @return The item blacklist.
+     */
+    public Blacklist getBlacklist() {
+        return blacklist;
     }
 
     /**

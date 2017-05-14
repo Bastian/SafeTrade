@@ -1,6 +1,8 @@
 package de.oppermann.bastian.safetrade.util;
 
 import de.oppermann.bastian.safetrade.Main;
+import de.oppermann.bastian.safetrade.events.TradeAbortEvent;
+import de.oppermann.bastian.safetrade.events.TradeSuccessEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Item;
@@ -152,16 +154,47 @@ public class Trade {
                     return;
                 }
             }
+
+            List<ItemStack> itemsPlayer1To2 = new ArrayList<>();
+            List<ItemStack> itemsPlayer2To1 = new ArrayList<>();
             for (int slot : economy != null ?
-                    Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITH_MONEY : Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
+                    InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
                 ItemStack stack = tradingInventories[0].getItem(slot);
                 if (stack != null) {
-                    giveItem(player2, stack); // the same as abort but with swapped players :)
+                    itemsPlayer1To2.add(new ItemStack(stack));
                 }
                 stack = tradingInventories[1].getItem(slot);
                 if (stack != null) {
-                    giveItem(player1, stack);
+                    itemsPlayer2To1.add(new ItemStack(stack));
                 }
+            }
+
+            TradeSuccessEvent event = new TradeSuccessEvent(player1, player2, itemsPlayer1To2, itemsPlayer2To1, offeredMoney[0], offeredMoney[1]);
+            Bukkit.getPluginManager().callEvent(event);
+            if (event.isCancelled()) {
+                // Give the items back. We don't use the list from the event.
+                for (int slot : economy != null ?
+                        InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
+                    ItemStack stack = tradingInventories[0].getItem(slot);
+                    if (stack != null) {
+                        giveItem(player1, stack);
+                    }
+                    stack = tradingInventories[1].getItem(slot);
+                    if (stack != null) {
+                        giveItem(player2, stack);
+                    }
+                }
+                // The event was cancelled
+                return;
+            }
+
+            // We use the list from the event to allow the event listener to modify it.
+            // E.g. you can use this to implement something like taxes etc.
+            for (ItemStack stack : itemsPlayer1To2) {
+                giveItem(player2, stack);
+            }
+            for (ItemStack stack : itemsPlayer2To1) {
+                giveItem(player1, stack);
             }
 
             if (economy != null) {
@@ -203,7 +236,7 @@ public class Trade {
         player2.closeInventory(); // I think it's safer to close the inventories BEFORE giving them back their items
 
         for (int slot : economy != null ?
-                Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITH_MONEY : Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
+                InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY : InventoryUtil.TRADING_SLOTS_LEFT_WITHOUT_MONEY) {
             ItemStack stack = tradingInventories[0].getItem(slot);
             if (stack != null) {
                 giveItem(player1, stack);
@@ -224,6 +257,9 @@ public class Trade {
             player2.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("you_aborted_trade"));
         }
         Main.getInstance().incrementAbortedTrades();
+
+        TradeAbortEvent event = new TradeAbortEvent(whoAborted, player1.equals(whoAborted) ? player2 : player1);
+        Bukkit.getPluginManager().callEvent(event);
     }
 
     /**

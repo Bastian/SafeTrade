@@ -1,6 +1,8 @@
 package de.oppermann.bastian.safetrade.commands;
 
 import de.oppermann.bastian.safetrade.Main;
+import de.oppermann.bastian.safetrade.events.TradeRequestAcceptEvent;
+import de.oppermann.bastian.safetrade.events.TradeRequestEvent;
 import de.oppermann.bastian.safetrade.util.AcceptAction;
 import de.oppermann.bastian.safetrade.util.AcceptCommandManager;
 import de.oppermann.bastian.safetrade.util.JSONUtil;
@@ -176,6 +178,13 @@ public class TradeCommand implements CommandExecutor {
 
         lastRequest.put(player.getUniqueId(), System.currentTimeMillis());
 
+        TradeRequestEvent event = new TradeRequestEvent(player, target);
+        Bukkit.getPluginManager().callEvent(event);
+        if (event.isCancelled()) {
+            // The event was cancelled
+            return true;
+        }
+
         player.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("successfully_requested_player")
                 .replace("{player}", target.getName()));
         target.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("player_wants_to_trade")
@@ -213,6 +222,13 @@ public class TradeCommand implements CommandExecutor {
                     target.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("player_to_far_away")
                             .replace("{player}", player.getName())
                             .replace("{max_distance}", String.valueOf(maxDistance)));
+                    return;
+                }
+
+                TradeRequestAcceptEvent event = new TradeRequestAcceptEvent(player, target);
+                Bukkit.getPluginManager().callEvent(event);
+                if (event.isCancelled()) {
+                    // The event was cancelled
                     return;
                 }
 
