@@ -169,7 +169,7 @@ public class Trade {
                 }
             }
 
-            TradeSuccessEvent event = new TradeSuccessEvent(player1, player2, itemsPlayer1To2, itemsPlayer1To2, offeredMoney[0], offeredMoney[1]);
+            TradeSuccessEvent event = new TradeSuccessEvent(player1, player2, itemsPlayer1To2, itemsPlayer2To1, offeredMoney[0], offeredMoney[1]);
             Bukkit.getPluginManager().callEvent(event);
             if (event.isCancelled()) {
                 // Give the items back. We don't use the list from the event.
