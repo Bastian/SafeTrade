@@ -72,6 +72,10 @@ public class Trade {
         if (getTradeOf(player1) != null || getTradeOf(player2) != null) {
             throw new IllegalStateException("One player (or both) is already trading with someone!");
         }
+
+        player1.closeInventory();
+        player2.closeInventory();
+
         activeTrades.add(this);
 
         player1.openInventory(tradingInventories[0]);
