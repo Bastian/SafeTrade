@@ -100,7 +100,14 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new InventoryDragListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerDeathListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
-        Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), this);
+
+        // The PlayerPickupItemEvent got replaced by the EntityPickupItemEvent in 1.12+
+        try {
+            Class.forName("org.bukkit.event.entity.EntityPickupItemEvent");
+            Bukkit.getPluginManager().registerEvents(new EntityPickupItemListener(), this);
+        } catch( ClassNotFoundException e) {
+            Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
+        }
 
         // start metrics
         setupCharts(new Metrics(this));
