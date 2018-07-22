@@ -6,3 +6,4 @@ softdepend: [Vault]
 commands:
    trade:
      description: Starts a trade. More information with /trade help!
+     aliases: [safetrade]
