@@ -2,6 +2,7 @@ name: SafeTrade
 version: 1.0.16
 author: BtoBastian
 main: de.oppermann.bastian.safetrade.Main
+api-version: 1.13
 softdepend: [Vault]
 commands:
    trade:

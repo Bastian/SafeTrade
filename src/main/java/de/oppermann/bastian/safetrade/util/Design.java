@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
 
 /**
  * This class is used to manage the trade inventory design.
@@ -26,10 +27,10 @@ public class Design {
      */
     public Design(JavaPlugin plugin) {
         this.plugin = plugin;
-        File configFile = new File(plugin.getDataFolder(), "design.yml");
+        File configFile = new File(plugin.getDataFolder(), "style.yml");
         if (!configFile.exists()) {
             try {
-                FileUtils.copy(plugin.getResource("design.yml"), new File(plugin.getDataFolder(), "design.yml"));
+                FileUtils.copy(plugin.getResource("style.yml"), new File(plugin.getDataFolder(), "style.yml"));
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -50,32 +51,14 @@ public class Design {
         if (item == null) {
             return new ItemStack(Material.TNT);
         }
-        String[] idAndData = item.split(":");
-        int itemId = 0;
-        byte itemData = 0;
-        if (idAndData.length == 0) {
-            return new ItemStack(Material.TNT);
+
+        Material material = Material.matchMaterial(item);
+        if (material == null) {
+            material = Material.TNT;
+            lore = new String[] { "Invalid material in style.yml file!" };
         }
 
-        // Get the id as integer
-        if (idAndData.length >= 1) {
-            try {
-                itemId = Integer.parseInt(idAndData[0]);
-            } catch (NumberFormatException e) {
-                return new ItemStack(Material.TNT);
-            }
-        }
-
-        // Get the data as byte
-        if (idAndData.length >= 2) {
-            try {
-                itemData = Byte.parseByte(idAndData[1]);
-            } catch (NumberFormatException e) {
-                return new ItemStack(Material.TNT);
-            }
-        }
-
-        ItemStack itemStack = new ItemStack(itemId, 1, itemData);
+        ItemStack itemStack = new ItemStack(material, 1);
         ItemMeta itemMeta = itemStack.getItemMeta();
         itemMeta.setDisplayName(displayName);
         if (lore.length != 0) {
@@ -86,10 +69,10 @@ public class Design {
     }
 
     /**
-     * Reloads the design.yml file.
+     * Reloads the style.yml file.
      */
     public void reload() {
-        config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "design.yml"));
+        config = YamlConfiguration.loadConfiguration(new File(plugin.getDataFolder(), "style.yml"));
         config.options().copyDefaults(true);
     }
 

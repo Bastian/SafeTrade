@@ -1,0 +1,84 @@
+######################################################################
+######################################################################
+###           _____        __  _______            _                ###
+###          / ____|      / _||__   __|          | |               ###
+###         | (___   __ _| |_ ___| |_ __ __ _  __| | ___           ###
+###          \___ \ / _` |  _/ _ \ | '__/ _` |/ _` |/ _ \          ###
+###          ____) | (_| | ||  __/ | | | (_| | (_| |  __/          ###
+###         |_____/ \__,_|_| \___|_|_|  \__,_|\__,_|\___|          ###
+###                                           by BtoBastian        ###
+######################################################################
+######################################################################
+#              Design settings (materials in inventory)              #
+######################################################################
+# This file allows you to change the design of the trading inventory #
+# Format: Items just use the name of the item.                       #
+#         A list with all available items can be found here:         #
+# https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html  #
+#         You can omit underscores and write in lower case           #
+######################################################################
+######################################################################
+# The item which is used to seperate the right and left part of the  #
+# trading inventory.                                                 #
+# Default value: "iron bars"                                         #
+######################################################################
+seperator: "iron bars"
+######################################################################
+# The buttons which are used to add/remove money.                    #
+# Default values:                                                    #
+# small: "gold nugget"                                               #
+# medium: "gold ingot"                                               #
+# large: "gold block"                                                #
+# clear money: "barrier"                                             #
+######################################################################
+smallMoney: "gold nugget"
+mediumMoney: "gold ingot"
+largeMoney: "gold block"
+clearMoney: "barrier"
+######################################################################
+# The icon which is used to show the amount of offered money.        #
+# Default values:                                                    #
+# small: "gold nugget"                                               #
+# medium: "gold ingot"                                               #
+# large: "gold block"                                                #
+# very large: "diamond"                                              #
+# very very large: "diamond block"                                   #
+# no money: "barrier"                                                #
+######################################################################
+smallMoneyOffered: "gold nugget"
+mediumMoneyOffered: "gold ingot"
+largeMoneyOffered: "gold block"
+veryLargeMoneyOffered: "diamond"
+veryVeryLargeMoneyOffered: "diamond block"
+noMoneyOffered: "barrier"
+######################################################################
+# The item which are used to accept or abort a trade                 #
+# Default values:                                                    #
+# mark as ready: "lime wool"                                         #
+# accept trade: "lime wool"                                          #
+# abort trade: "red wool"                                            #
+######################################################################
+markAsReady: "lime wool"
+acceptTrade: "lime wool"
+abortTrade: "red wool"
+######################################################################
+# The item which shows if the partner is (not) ready/has accepted    #
+# Default values:                                                    #
+# partner ready: "lime dye"                                          #
+# partner not ready: "grey dye"                                      #
+# partner accepted: "lime dye"                                       #
+# partner not accepted: "grey dye"                                   #
+######################################################################
+partnerReady: "lime dye"
+partnerNotReady: "grey dye"
+partnerAccepted: "lime dye"
+partnerNotAccepted: "grey dye"
+######################################################################
+# The item which shows when you ware ready (or have accepted) but    #
+# your partner is not ready (or has not accepted) yet.               #
+# Default values:                                                    #
+# ready and wait for partner: "lime glass pane"                      #
+# accepted and wait for partner: "lime glass pane"                   #
+######################################################################
+readyAndWaitForPartner: "lime glass pane"
+acceptedAndWaitForPartner: "lime glass pane"
