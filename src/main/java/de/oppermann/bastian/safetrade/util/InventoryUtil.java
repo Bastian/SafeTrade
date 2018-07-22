@@ -86,7 +86,7 @@ public class InventoryUtil {
             defaultTradeInventory.setItem(9 * 3 + i, separateStack.clone());
         }
 
-        setPartnerStatus(defaultTradeInventory, false, ChatColor.RED +
+        setPartnerStatus(defaultTradeInventory, false, false, ChatColor.RED +
                 Main.getInstance().getMessages().getString("partner_not_ready"));
 
 
@@ -116,13 +116,25 @@ public class InventoryUtil {
      * Sets the status of the partner.
      *
      * @param inventory The inventory to modify.
-     * @param status    The status (<code>true</code> = ready).
+     * @param status    The status (<code>false</code> = 1. stage of the trade, <code>true</code> = 2. stage of the trade).
+     * @param done      The state (<code>true</code> = ready/accepted).
      * @param text      The text of the status item.
      */
-    public void setPartnerStatus(Inventory inventory, boolean status, String text) {
-        ItemStack partnerStatus = status ?
-                design.getItem("partnerReady", text) :
-                design.getItem("partnerNotReady", text);
+    public void setPartnerStatus(Inventory inventory, boolean status, boolean done, String text) {
+        ItemStack partnerStatus = null;
+        if (status) { // First stage of the trade
+            if (done) {
+                partnerStatus = design.getItem("partnerAccepted", text);
+            } else {
+                partnerStatus = design.getItem("partnerNotAccepted", text);
+            }
+        } else { // Second stage of the trade
+            if (done) {
+                partnerStatus = design.getItem("partnerReady", text);
+            } else {
+                partnerStatus = design.getItem("partnerNotReady", text);
+            }
+        }
         for (int i = 0; i < 4; i++) {
             inventory.setItem(9 * 4 + i + 5, partnerStatus.clone());
             inventory.setItem(9 * 5 + i + 5, partnerStatus.clone());

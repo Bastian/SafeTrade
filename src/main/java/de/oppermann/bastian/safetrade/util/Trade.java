@@ -95,13 +95,13 @@ public class Trade {
 
         if (traders[0].equals(player.getUniqueId())) {
             acceptedOrReady[0] = true;
-            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[1], true,
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[1], status, true,
                     ChatColor.GREEN + (!status ? Main.getInstance().getMessages().getString("partner_ready") :
                             Main.getInstance().getMessages().getString("partner_accepted_trade")));
             Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[0], status ? (byte) 3 : (byte) 1, economy != null);
         } else {
             acceptedOrReady[1] = true;
-            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[0], true,
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[0], status, true,
                     ChatColor.GREEN + (!status ? Main.getInstance().getMessages().getString("partner_ready") :
                             Main.getInstance().getMessages().getString("partner_accepted_trade")));
             Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[1], status ? (byte) 3 : (byte) 1, economy != null);
@@ -112,9 +112,9 @@ public class Trade {
             status = true; // next step! Now they are both ready and must accept the trade :)
             acceptedOrReady[0] = false;
             acceptedOrReady[1] = false;
-            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[0], false,
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[0], status, false,
                     ChatColor.RED + Main.getInstance().getMessages().getString("partner_not_accepted_yet"));
-            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[1], false,
+            Main.getInstance().getInventoryUtil().setPartnerStatus(tradingInventories[1], status, false,
                     ChatColor.RED + Main.getInstance().getMessages().getString("partner_not_accepted_yet"));
             Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[0], (byte) 2, economy != null);
             Main.getInstance().getInventoryUtil().setOwnControlField(tradingInventories[1], (byte) 2, economy != null);
@@ -136,7 +136,7 @@ public class Trade {
                (economy.getMoney(player2) < offeredMoney[1] && offeredMoney[1] != 0))
             ) { // If a player hasn't enough money.
                 if (Main.getInstance().getConfig().getBoolean("noDebts", true)) {
-                    for (int slot : Main.getInstance().getInventoryUtil().TRADING_SLOTS_LEFT_WITH_MONEY) {
+                    for (int slot : InventoryUtil.TRADING_SLOTS_LEFT_WITH_MONEY) {
                         ItemStack stack = tradingInventories[0].getItem(slot);
                         if (stack != null) {
                             giveItem(player1, stack);
