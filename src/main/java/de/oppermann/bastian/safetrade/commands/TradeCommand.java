@@ -242,7 +242,9 @@ public class TradeCommand implements CommandExecutor {
             @Override
             public void onTimeout() {
                 Player player = Bukkit.getPlayer(playerUUID);
-                player.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("trade_request_not_accepted"));
+                if (player != null) {
+                    player.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("trade_request_not_accepted"));
+                }
             }
         });
         return true;
