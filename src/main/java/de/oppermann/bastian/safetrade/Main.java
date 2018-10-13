@@ -2,10 +2,21 @@ package de.oppermann.bastian.safetrade;
 
 import de.oppermann.bastian.safetrade.commands.TradeCommand;
 import de.oppermann.bastian.safetrade.commands.TradeTabCompleter;
-import de.oppermann.bastian.safetrade.listener.*;
-import de.oppermann.bastian.safetrade.util.*;
+import de.oppermann.bastian.safetrade.listener.InventoryClickListener;
+import de.oppermann.bastian.safetrade.listener.InventoryCloseListener;
+import de.oppermann.bastian.safetrade.listener.InventoryDragListener;
+import de.oppermann.bastian.safetrade.listener.PlayerDeathListener;
+import de.oppermann.bastian.safetrade.listener.PlayerInteractEntityListener;
+import de.oppermann.bastian.safetrade.listener.PlayerPickupItemListener;
+import de.oppermann.bastian.safetrade.util.Blacklist;
+import de.oppermann.bastian.safetrade.util.Design;
+import de.oppermann.bastian.safetrade.util.FileUtils;
+import de.oppermann.bastian.safetrade.util.IEconomy;
+import de.oppermann.bastian.safetrade.util.InventoryUtil;
+import de.oppermann.bastian.safetrade.util.ResourceBundleControl;
+import de.oppermann.bastian.safetrade.util.Trade;
 import net.milkbowl.vault.economy.Economy;
-import org.bstats.Metrics;
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -20,6 +31,7 @@ import java.util.HashMap;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.concurrent.Callable;
 import java.util.logging.Level;
 
 /**
@@ -127,117 +139,108 @@ public class Main extends JavaPlugin {
      */
     private void setupCharts(Metrics metrics) {
         // language in config
-        metrics.addCustomChart(new Metrics.SimplePie("used_language") {
+        metrics.addCustomChart(new Metrics.SimplePie("used_language", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return getConfig().getString("language", "auto");
             }
-        });
+        }));
 
-        metrics.addCustomChart(new Metrics.SimplePie("default_locale") {
+        metrics.addCustomChart(new Metrics.SimplePie("default_locale", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return Locale.getDefault().toLanguageTag();
             }
-        });
+        }));
 
         // encoding in config
-        metrics.addCustomChart(new Metrics.SimplePie("encoding") {
+        metrics.addCustomChart(new Metrics.SimplePie("encoding", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return getConfig().getString("encoding", "UTF-8");
             }
-        });
+        }));
 
         // tradeWithMoney in config
-        metrics.addCustomChart(new Metrics.SimplePie("money_enabled") {
+        metrics.addCustomChart(new Metrics.SimplePie("money_enabled", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return getConfig().getBoolean("tradeWithMoney", true) ? "enabled" : "disabled";
             }
-        });
+        }));
 
         // noDebts in config
-        metrics.addCustomChart(new Metrics.SimplePie("no_debts_enabled") {
+        metrics.addCustomChart(new Metrics.SimplePie("no_debts_enabled", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return getConfig().getBoolean("noDebts", true) ? "enabled" : "disabled";
             }
-        });
+        }));
 
         // maxTradingDistance in config
-        metrics.addCustomChart(new Metrics.SimplePie("max_trading_distance") {
+        metrics.addCustomChart(new Metrics.SimplePie("max_trading_distance", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return String.valueOf(getConfig().getInt("maxTradingDistance", 15));
             }
-        });
+        }));
 
         // tradeThroughWorlds in config
-        metrics.addCustomChart(new Metrics.SimplePie("trade_through_worlds_enabled") {
+        metrics.addCustomChart(new Metrics.SimplePie("trade_through_worlds_enabled", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return getConfig().getBoolean("tradeThroughWorlds", false) ? "enabled" : "disabled";
             }
-        });
+        }));
 
         // fastTrade in config
-        metrics.addCustomChart(new Metrics.SimplePie("fast_trade_enabled") {
+        metrics.addCustomChart(new Metrics.SimplePie("fast_trade_enabled", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return getConfig().getBoolean("fastTrade", false) ? "enabled" : "disabled";
             }
-        });
+        }));
 
         // successful trades
-        metrics.addCustomChart(new Metrics.SingleLineChart("successful_trades") {
+        metrics.addCustomChart(new Metrics.SingleLineChart("successful_trades", new Callable<Integer>() {
             @Override
-            public int getValue() {
+            public Integer call() {
                 return successfulTrades;
             }
-        });
+        }));
 
         // aborted trades
-        metrics.addCustomChart(new Metrics.SingleLineChart("aborted_trades") {
+        metrics.addCustomChart(new Metrics.SingleLineChart("aborted_trades", new Callable<Integer>() {
             @Override
-            public int getValue() {
+            public Integer call() {
                 return abortedTrades;
             }
-        });
-
-        // A map which shows in which countries is traded most
-        metrics.addCustomChart(new Metrics.AdvancedMapChart("most_active_trading_regions") {
-            @Override
-            public HashMap<Metrics.Country, Integer> getValues(HashMap<Metrics.Country, Integer> valueMap) {
-                valueMap.put(Metrics.Country.AUTO_DETECT, abortedTrades + successfulTrades);
-                return valueMap;
-            }
-        });
+        }));
 
         // Is Vault used?
-        metrics.addCustomChart(new Metrics.SimplePie("vault_used") {
+        metrics.addCustomChart(new Metrics.SimplePie("vault_used", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() throws Exception {
                 return hasVault ? "Used" : "Not used";
             }
-        });
+        }));
 
         // The used economy plugin
-        metrics.addCustomChart(new Metrics.SimplePie("economy_plugin") {
+        metrics.addCustomChart(new Metrics.SimplePie("economy_plugin", new Callable<String>() {
             @Override
-            public String getValue() {
+            public String call() {
                 return economyName;
             }
-        });
+        }));
 
         // Download source
-        metrics.addCustomChart(new Metrics.SimplePie("download_source") {
+        metrics.addCustomChart(new Metrics.SimplePie("download_source", new Callable<String>() {
             @Override
-            public String getValue() {
-                // I will change this when before compiling
+            public String call() {
+                // Now the only source.
                 return "spigotmc.org";
             }
-        });
+        }));
     }
 
     /**
