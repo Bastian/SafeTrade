@@ -22,7 +22,7 @@
                 <configuration>
                     <artifactSet>
                         <includes>
-                            <include>org.bstats:*</include>
+                            <include>org.bstats.bStats-Metrics:*</include>
                         </includes>
                     </artifactSet>
                     <relocations>
