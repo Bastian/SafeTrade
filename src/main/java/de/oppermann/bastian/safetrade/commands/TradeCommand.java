@@ -215,6 +215,11 @@ public class TradeCommand implements CommandExecutor {
                     return;
                 }
 
+                if (player.isSleeping() || target.isSleeping()) {
+                    target.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("trading_not_possible_in_bed"));
+                    return;
+                }
+
                 int maxDistance = Main.getInstance().getConfig().getInt("maxTradingDistance");
                 if (!Main.getInstance().getConfig().getBoolean("tradeThroughWorlds") && maxDistance > 0 &&
                         target.getLocation().distanceSquared(player.getLocation()) > maxDistance * maxDistance) {
