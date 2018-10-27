@@ -70,9 +70,9 @@ abortTrade: "red wool"
 # partner not accepted: "grey dye"                                   #
 ######################################################################
 partnerReady: "lime dye"
-partnerNotReady: "grey dye"
+partnerNotReady: "gray dye"
 partnerAccepted: "lime dye"
-partnerNotAccepted: "grey dye"
+partnerNotAccepted: "gray dye"
 ######################################################################
 # The item which shows when you ware ready (or have accepted) but    #
 # your partner is not ready (or has not accepted) yet.               #
