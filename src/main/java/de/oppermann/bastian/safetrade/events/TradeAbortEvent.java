@@ -13,9 +13,9 @@ public class TradeAbortEvent extends Event {
     private static final HandlerList handlerList = new HandlerList();
 
     // The player who aborted the trade
-    private Player aborter;
+    private final Player aborter;
     // The trading partner.
-    private Player tradingPartner;
+    private final Player tradingPartner;
 
     /**
      * Creates a new trade abort event.

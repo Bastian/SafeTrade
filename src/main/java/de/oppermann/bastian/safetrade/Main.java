@@ -27,11 +27,7 @@ import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.HashMap;
-import java.util.Locale;
-import java.util.MissingResourceException;
-import java.util.ResourceBundle;
-import java.util.concurrent.Callable;
+import java.util.*;
 import java.util.logging.Level;
 
 /**
@@ -104,8 +100,8 @@ public class Main extends JavaPlugin {
 
         loadConfiguration();
 
-        getCommand("trade").setExecutor(new TradeCommand());
-        getCommand("trade").setTabCompleter(new TradeTabCompleter());
+        Objects.requireNonNull(getCommand("trade")).setExecutor(new TradeCommand());
+        Objects.requireNonNull(getCommand("trade")).setTabCompleter(new TradeTabCompleter());
 
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(), this);
@@ -115,9 +111,7 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
         // start metrics
-        setupCharts(new Metrics(this));
-
-        super.onEnable();
+        setupCharts(new Metrics(this, 4));
     }
 
     /*
@@ -129,7 +123,6 @@ public class Main extends JavaPlugin {
         for (Trade trade : Trade.getActiveTrades()) { // abort all trades
             trade.abort(null);
         }
-        super.onDisable();
     }
 
     /**
@@ -139,107 +132,52 @@ public class Main extends JavaPlugin {
      */
     private void setupCharts(Metrics metrics) {
         // language in config
-        metrics.addCustomChart(new Metrics.SimplePie("used_language", new Callable<String>() {
-            @Override
-            public String call() {
-                return getConfig().getString("language", "auto");
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("used_language", () ->
+                getConfig().getString("language", "auto")));
 
-        metrics.addCustomChart(new Metrics.SimplePie("default_locale", new Callable<String>() {
-            @Override
-            public String call() {
-                return Locale.getDefault().toLanguageTag();
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("default_locale", () ->
+                Locale.getDefault().toLanguageTag()));
 
         // encoding in config
-        metrics.addCustomChart(new Metrics.SimplePie("encoding", new Callable<String>() {
-            @Override
-            public String call() {
-                return getConfig().getString("encoding", "UTF-8");
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("encoding", () ->
+                getConfig().getString("encoding", "UTF-8")));
 
         // tradeWithMoney in config
-        metrics.addCustomChart(new Metrics.SimplePie("money_enabled", new Callable<String>() {
-            @Override
-            public String call() {
-                return getConfig().getBoolean("tradeWithMoney", true) ? "enabled" : "disabled";
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("money_enabled", () ->
+                getConfig().getBoolean("tradeWithMoney", true) ? "enabled" : "disabled"));
 
         // noDebts in config
-        metrics.addCustomChart(new Metrics.SimplePie("no_debts_enabled", new Callable<String>() {
-            @Override
-            public String call() {
-                return getConfig().getBoolean("noDebts", true) ? "enabled" : "disabled";
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("no_debts_enabled", () ->
+                getConfig().getBoolean("noDebts", true) ? "enabled" : "disabled"));
 
         // maxTradingDistance in config
-        metrics.addCustomChart(new Metrics.SimplePie("max_trading_distance", new Callable<String>() {
-            @Override
-            public String call() {
-                return String.valueOf(getConfig().getInt("maxTradingDistance", 15));
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("max_trading_distance", () ->
+                String.valueOf(getConfig().getInt("maxTradingDistance", 15))));
 
         // tradeThroughWorlds in config
-        metrics.addCustomChart(new Metrics.SimplePie("trade_through_worlds_enabled", new Callable<String>() {
-            @Override
-            public String call() {
-                return getConfig().getBoolean("tradeThroughWorlds", false) ? "enabled" : "disabled";
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("trade_through_worlds_enabled", () ->
+                getConfig().getBoolean("tradeThroughWorlds", false) ? "enabled" : "disabled"));
 
         // fastTrade in config
-        metrics.addCustomChart(new Metrics.SimplePie("fast_trade_enabled", new Callable<String>() {
-            @Override
-            public String call() {
-                return getConfig().getBoolean("fastTrade", false) ? "enabled" : "disabled";
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("fast_trade_enabled", () ->
+                getConfig().getBoolean("fastTrade", false) ? "enabled" : "disabled"));
 
         // successful trades
-        metrics.addCustomChart(new Metrics.SingleLineChart("successful_trades", new Callable<Integer>() {
-            @Override
-            public Integer call() {
-                return successfulTrades;
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SingleLineChart("successful_trades", () -> successfulTrades));
 
         // aborted trades
-        metrics.addCustomChart(new Metrics.SingleLineChart("aborted_trades", new Callable<Integer>() {
-            @Override
-            public Integer call() {
-                return abortedTrades;
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SingleLineChart("aborted_trades", () -> abortedTrades));
 
         // Is Vault used?
-        metrics.addCustomChart(new Metrics.SimplePie("vault_used", new Callable<String>() {
-            @Override
-            public String call() throws Exception {
-                return hasVault ? "Used" : "Not used";
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("vault_used", () -> hasVault ? "Used" : "Not used"));
 
         // The used economy plugin
-        metrics.addCustomChart(new Metrics.SimplePie("economy_plugin", new Callable<String>() {
-            @Override
-            public String call() {
-                return economyName;
-            }
-        }));
+        metrics.addCustomChart(new Metrics.SimplePie("economy_plugin", () -> economyName));
 
         // Download source
-        metrics.addCustomChart(new Metrics.SimplePie("download_source", new Callable<String>() {
-            @Override
-            public String call() {
-                // Now the only source.
-                return "spigotmc.org";
-            }
+        metrics.addCustomChart(new Metrics.SimplePie("download_source", () -> {
+            // Now the only source.
+            return "spigotmc.org";
         }));
     }
 

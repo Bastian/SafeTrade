@@ -13,7 +13,6 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.ResourceBundle;
 
 /**
  * This class handles all drags in a inventory.
@@ -27,9 +26,7 @@ public class InventoryDragListener implements Listener {
      */
     @EventHandler
     public void onInventoryDrag(final InventoryDragEvent event) {
-        if (event.getWhoClicked().getOpenInventory() == null) {
-            return;
-        }
+        event.getWhoClicked().getOpenInventory();
         Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
         if (trade == null) {
             return;
@@ -54,13 +51,9 @@ public class InventoryDragListener implements Listener {
             partnerInventory.setItem(entry.getKey() + 5, toSet);
         }
 
-        Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
-
-            @Override
-            public void run() {
-                for (HumanEntity player : partnerInventory.getViewers()) {
-                    ((Player) player).updateInventory();
-                }
+        Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+            for (HumanEntity player : partnerInventory.getViewers()) {
+                ((Player) player).updateInventory();
             }
         }, 1);
     }

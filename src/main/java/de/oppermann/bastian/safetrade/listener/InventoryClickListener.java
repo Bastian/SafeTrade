@@ -13,8 +13,6 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ResourceBundle;
-
 /**
  * This class handles all clicks in a inventory.
  */
@@ -124,13 +122,9 @@ public class InventoryClickListener implements Listener {
                     return;
                 }
 
-                Bukkit.getScheduler().runTaskLater(Main.getInstance(), new Runnable() {
-
-                    @Override
-                    public void run() {
-                        for (HumanEntity player : partnerInventory.getViewers()) {
-                            ((Player) player).updateInventory();
-                        }
+                Bukkit.getScheduler().runTaskLater(Main.getInstance(), () -> {
+                    for (HumanEntity player : partnerInventory.getViewers()) {
+                        ((Player) player).updateInventory();
                     }
                 }, 1);
             } else { // if they aren't the allowed slots
@@ -181,10 +175,13 @@ public class InventoryClickListener implements Listener {
         // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/Bukkit-Patches/0009-InventoryClickEvent-getClickedInventory.patch
         if (event.getRawSlot() < 0) {
             return null;
-        } else if (view.getTopInventory() != null && event.getRawSlot() < view.getTopInventory().getSize()) {
-            return view.getTopInventory();
         } else {
-            return view.getBottomInventory();
+            view.getTopInventory();
+            if (event.getRawSlot() < view.getTopInventory().getSize()) {
+                return view.getTopInventory();
+            } else {
+                return view.getBottomInventory();
+            }
         }
     }
 

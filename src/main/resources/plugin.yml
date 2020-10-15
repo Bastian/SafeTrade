@@ -1,5 +1,5 @@
-name: SafeTrade
-version: 1.1.0
+name: ${project.name}
+version: ${project.version}
 author: BtoBastian
 main: de.oppermann.bastian.safetrade.Main
 api-version: 1.13
