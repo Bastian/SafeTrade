@@ -26,7 +26,6 @@ public class InventoryDragListener implements Listener {
      */
     @EventHandler
     public void onInventoryDrag(final InventoryDragEvent event) {
-        event.getWhoClicked().getOpenInventory();
         Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
         if (trade == null) {
             return;

@@ -10,7 +10,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.InventoryAction;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 
 /**
@@ -25,14 +24,14 @@ public class InventoryClickListener implements Listener {
      */
     @EventHandler
     public void onInventoryClick(final InventoryClickEvent event) {
-        if (getClickedInventory(event) == null) {
+        if (event.getClickedInventory() == null) {
             return;
         }
         Trade trade = Trade.getTradeOf((Player) event.getWhoClicked());
         if (trade == null) {
             return;
         }
-        if (getClickedInventory(event) == event.getWhoClicked().getOpenInventory().getTopInventory()) {
+        if (event.getClickedInventory() == event.getWhoClicked().getOpenInventory().getTopInventory()) {
             final Inventory partnerInventory = trade.getInventoryOfPartner(event.getWhoClicked().getUniqueId());
             if (trade.getCurrentAllowedSlots(event.getWhoClicked().getUniqueId()).contains(event.getRawSlot())) {
                 if (trade.isReadyOrHasAccepted(event.getWhoClicked().getUniqueId())) {
@@ -45,7 +44,7 @@ public class InventoryClickListener implements Listener {
                     checkedAction = true;
                 }
                 if (event.getAction() == InventoryAction.PICKUP_ONE) {
-                    ItemStack toSet = getClickedInventory(event).getItem(event.getRawSlot()).clone();
+                    ItemStack toSet = event.getClickedInventory().getItem(event.getRawSlot()).clone();
                     toSet.setAmount(toSet.getAmount() - 1);
                     if (toSet.getAmount() == 0) {
                         toSet = null;
@@ -54,7 +53,7 @@ public class InventoryClickListener implements Listener {
                     checkedAction = true;
                 }
                 if (event.getAction() == InventoryAction.PICKUP_HALF) {
-                    ItemStack toSet = getClickedInventory(event).getItem(event.getRawSlot()).clone();
+                    ItemStack toSet = event.getClickedInventory().getItem(event.getRawSlot()).clone();
                     toSet.setAmount(toSet.getAmount() - (int) ((double) toSet.getAmount() / (double) 2 + 0.5));
                     if (toSet.getAmount() == 0) {
                         toSet = null;
@@ -63,7 +62,7 @@ public class InventoryClickListener implements Listener {
                     checkedAction = true;
                 }
                 if (event.getAction() == InventoryAction.DROP_ONE_SLOT) {
-                    ItemStack current = getClickedInventory(event).getItem(event.getRawSlot());
+                    ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
                     ItemStack toSet = current.clone();
                     toSet.setAmount(toSet.getAmount() - 1);
                     if (toSet.getAmount() == 0) {
@@ -73,7 +72,7 @@ public class InventoryClickListener implements Listener {
                     checkedAction = true;
                 }
                 if (event.getAction() == InventoryAction.PLACE_ONE) {
-                    ItemStack current = getClickedInventory(event).getItem(event.getRawSlot());
+                    ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
                     ItemStack toSet = event.getCursor().clone();
                     if (current != null && current.isSimilar(toSet)) {
                         toSet.setAmount(current.getAmount() + 1);
@@ -84,7 +83,7 @@ public class InventoryClickListener implements Listener {
                     checkedAction = true;
                 }
                 if (event.getAction() == InventoryAction.PLACE_ALL) {
-                    ItemStack current = getClickedInventory(event).getItem(event.getRawSlot());
+                    ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
                     ItemStack toSet = event.getCursor().clone();
                     if (current != null && current.isSimilar(toSet)) {
                         toSet.setAmount(current.getAmount() + toSet.getAmount());
@@ -93,7 +92,7 @@ public class InventoryClickListener implements Listener {
                     checkedAction = true;
                 }
                 if (event.getAction() == InventoryAction.PLACE_SOME) {
-                    ItemStack current = getClickedInventory(event).getItem(event.getRawSlot());
+                    ItemStack current = event.getClickedInventory().getItem(event.getRawSlot());
                     ItemStack toSet = event.getCursor().clone();
                     if (current != null && current.isSimilar(toSet)) {
                         toSet.setAmount(current.getAmount() + toSet.getAmount());
@@ -154,33 +153,10 @@ public class InventoryClickListener implements Listener {
                 event.setCancelled(true);
             }
 
-            if (getClickedInventory(event) != null &&
+            if (event.getClickedInventory() != null &&
                 Main.getInstance().getBlacklist().isBlacklisted(event.getCurrentItem()))
             {
                 event.setCancelled(true);
-            }
-        }
-    }
-
-    /**
-     * Because Bukkit (instead of Spigot) does not has an InventoryClickEvent#getClickedInventory() method
-     * we have to create it.
-     *
-     * @param event The InventoryClickEvent.
-     * @return The clicked inventory. <code>null</code> if no inventory was clicked.
-     */
-    private Inventory getClickedInventory(InventoryClickEvent event) {
-        InventoryView view = event.getView();
-        // Check out the spigot repo, if you want to see the original spigot method:
-        // https://hub.spigotmc.org/stash/projects/SPIGOT/repos/spigot/browse/Bukkit-Patches/0009-InventoryClickEvent-getClickedInventory.patch
-        if (event.getRawSlot() < 0) {
-            return null;
-        } else {
-            view.getTopInventory();
-            if (event.getRawSlot() < view.getTopInventory().getSize()) {
-                return view.getTopInventory();
-            } else {
-                return view.getBottomInventory();
             }
         }
     }
