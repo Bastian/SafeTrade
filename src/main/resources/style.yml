@@ -17,8 +17,12 @@
 # https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Material.html  #
 #         You can omit underscores and write in lower case           #
 ######################################################################
+# IMPORTANT: Only modify the style.yml file. The style_original.yml  #
+#            file will be overwritten on every server restart! It is #
+#            used as a fallback when new fields are introduced or    #
+#            materials get deprecated.                               #
 ######################################################################
-# The item which is used to seperate the right and left part of the  #
+# The item which is used to separate the right and left part of the  #
 # trading inventory.                                                 #
 # Default value: "iron bars"                                         #
 ######################################################################
@@ -65,20 +69,20 @@ abortTrade: "red wool"
 # The item which shows if the partner is (not) ready/has accepted    #
 # Default values:                                                    #
 # partner ready: "lime dye"                                          #
-# partner not ready: "grey dye"                                      #
+# partner not ready: "gray dye"                                      #
 # partner accepted: "lime dye"                                       #
-# partner not accepted: "grey dye"                                   #
+# partner not accepted: "gray dye"                                   #
 ######################################################################
 partnerReady: "lime dye"
-partnerNotReady: "grey dye"
+partnerNotReady: "gray dye"
 partnerAccepted: "lime dye"
-partnerNotAccepted: "grey dye"
+partnerNotAccepted: "gray dye"
 ######################################################################
 # The item which shows when you ware ready (or have accepted) but    #
 # your partner is not ready (or has not accepted) yet.               #
 # Default values:                                                    #
-# ready and wait for partner: "lime glass pane"                      #
-# accepted and wait for partner: "lime glass pane"                   #
+# ready and wait for partner: "lime stained glass pane"              #
+# accepted and wait for partner: "lime stained glass pane"           #
 ######################################################################
-readyAndWaitForPartner: "lime glass pane"
-acceptedAndWaitForPartner: "lime glass pane"
+readyAndWaitForPartner: "lime stained glass pane"
+acceptedAndWaitForPartner: "lime stained glass pane"

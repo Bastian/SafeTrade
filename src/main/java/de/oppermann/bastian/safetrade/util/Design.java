@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.logging.Level;
 
 /**
  * This class is used to manage the trade inventory design.
@@ -18,6 +19,7 @@ public class Design {
 
     private final JavaPlugin plugin;
     private FileConfiguration config;
+    private FileConfiguration fallbackConfig;
 
     /**
      * Creates a new Design object.
@@ -34,7 +36,16 @@ public class Design {
                 e.printStackTrace();
             }
         }
+
+        try {
+            FileUtils.copy(plugin.getResource("style.yml"), new File(plugin.getDataFolder(), "style_original.yml"));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        File fallbackConfigFile = new File(plugin.getDataFolder(), "style_original.yml");
+
         config = YamlConfiguration.loadConfiguration(configFile);
+        fallbackConfig = YamlConfiguration.loadConfiguration(fallbackConfigFile);
     }
 
     /**
@@ -48,13 +59,30 @@ public class Design {
     public ItemStack getItem(String id, String displayName, String... lore) {
         String item = config.getString(id);
         if (item == null) {
-            return new ItemStack(Material.TNT);
+            item = fallbackConfig.getString(id);
+            if (item == null) {
+                plugin.getLogger().log(Level.SEVERE, "Failed to find material for id '" + id + "'! " +
+                        "Please update to the latest SafeTrade version or report this as a bug if you are already " +
+                        "using the latest version!");
+                return new ItemStack(Material.TNT);
+            }
         }
 
         Material material = Material.matchMaterial(item);
         if (material == null) {
-            material = Material.TNT;
-            lore = new String[] { "Invalid material in style.yml file!" };
+            String invalidItem = item;
+            item = fallbackConfig.getString(id);
+            material = Material.matchMaterial(item);
+            if (material == null) {
+                material = Material.TNT;
+                lore = new String[] { "Invalid material in style.yml file for " + id + "!\n" +
+                        "Please update to the latest SafeTrade version or report this as a bug if you are already " +
+                        "using the latest version!" };
+            } else {
+                plugin.getLogger().warning("Your style.yml file contains an invalid material for id '" + id +
+                        "': '" + invalidItem + "'. Please fix your configuration. Take a look at the " +
+                        "style_original.yml file for a correct configuration.");
+            }
         }
 
         ItemStack itemStack = new ItemStack(material, 1);
