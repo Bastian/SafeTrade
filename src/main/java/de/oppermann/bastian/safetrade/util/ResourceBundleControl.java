@@ -62,7 +62,7 @@ public class ResourceBundleControl extends ResourceBundle.Control {
     /**
      * Just empty default constructor
      */
-    public ResourceBundleControl() {
+    private ResourceBundleControl() {
     }
 
     /**
@@ -88,8 +88,7 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         ResourceBundle bundle = null;
         if (format.equals("java.class")) {
             try {
-                @SuppressWarnings(
-                        {"unchecked"})
+                @SuppressWarnings({"unchecked"})
                 Class<? extends ResourceBundle> bundleClass = (Class<? extends ResourceBundle>) loader.loadClass(bundleName);
 
                 // If the class isn't a ResourceBundle subclass, throw a
@@ -108,26 +107,23 @@ public class ResourceBundleControl extends ResourceBundle.Control {
             InputStreamReader isr = null;
             InputStream stream;
             try {
-                stream = AccessController.doPrivileged(new PrivilegedExceptionAction<InputStream>() {
-                    @Override
-                    public InputStream run() throws IOException {
-                        InputStream is = null;
-                        if (reloadFlag) {
-                            URL url = classLoader.getResource(resourceName);
-                            if (url != null) {
-                                URLConnection connection = url.openConnection();
-                                if (connection != null) {
-                                    // Disable caches to get fresh data for
-                                    // reloading.
-                                    connection.setUseCaches(false);
-                                    is = connection.getInputStream();
-                                }
+                stream = AccessController.doPrivileged((PrivilegedExceptionAction<InputStream>) () -> {
+                    InputStream is = null;
+                    if (reloadFlag) {
+                        URL url = classLoader.getResource(resourceName);
+                        if (url != null) {
+                            URLConnection connection = url.openConnection();
+                            if (connection != null) {
+                                // Disable caches to get fresh data for
+                                // reloading.
+                                connection.setUseCaches(false);
+                                is = connection.getInputStream();
                             }
-                        } else {
-                            is = classLoader.getResourceAsStream(resourceName);
                         }
-                        return is;
+                    } else {
+                        is = classLoader.getResourceAsStream(resourceName);
                     }
+                    return is;
                 });
                 if (stream != null) {
                     isr = new InputStreamReader(stream, encoding);
@@ -166,4 +162,3 @@ public class ResourceBundleControl extends ResourceBundle.Control {
         this.encoding = encoding;
     }
 }
-

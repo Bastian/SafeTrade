@@ -8,11 +8,11 @@ public interface AcceptAction {
     /**
      * This is called when the player accepted.
      */
-    public void perform();
+    void perform();
 
     /**
      * This is called when the action times out.
      */
-    public void onTimeout();
+    void onTimeout();
 
 }

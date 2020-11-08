@@ -26,11 +26,7 @@ public class AcceptCommandManager {
      * @return The action that is waiting to be confirmed by the player, or <code>null</code> if there is no action.
      */
     public static AcceptAction getAction(Player player) {
-        if (actions.containsKey(player.getName().toLowerCase())) {
-            return actions.get(player.getName().toLowerCase());
-        } else {
-            return null;
-        }
+        return actions.getOrDefault(player.getName().toLowerCase(), null);
     }
 
     /**

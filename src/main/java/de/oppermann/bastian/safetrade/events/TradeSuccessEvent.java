@@ -17,12 +17,15 @@ public class TradeSuccessEvent extends Event implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
 
     // The two players
-    private Player player1, player2;
+    private final Player player1;
+    private final Player player2;
 
     // The transferred items
-    private List<ItemStack> itemsPlayer1To2, itemsPlayer2To1;
+    private final List<ItemStack> itemsPlayer1To2;
+    private final List<ItemStack> itemsPlayer2To1;
     // The transferred money
-    private double money1To2, money2To1;
+    private final double money1To2;
+    private final double money2To1;
 
     // Defines if the event should be cancelled.
     private boolean cancelled;

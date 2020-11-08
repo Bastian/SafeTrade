@@ -16,6 +16,7 @@ import java.util.*;
 /**
  * This class manages the trades.
  */
+@SuppressWarnings("PointlessArithmeticExpression")
 public class Trade {
 
     /**
@@ -41,7 +42,7 @@ public class Trade {
     /**
      * The money which the players offers.
      */
-    private final int offeredMoney[] = {0, 0};
+    private final int[] offeredMoney = {0, 0};
 
     /**
      * The status of the trade.
@@ -54,7 +55,7 @@ public class Trade {
      * A copy of the IEconomy inctance in the main class.<p>
      * We don't want that some strange things happen if the field changed while trading (worst case: null).
      */
-    private IEconomy economy = Main.getInstance().getEconomy();
+    private final IEconomy economy = Main.getInstance().getEconomy();
 
     /**
      * Class constructor.
@@ -251,7 +252,7 @@ public class Trade {
             }
         }
 
-        if (whoAborted != null && player1.equals(whoAborted)) {
+        if (player1.equals(whoAborted)) {
             player2.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("player_aborted_trade")
                     .replace("{player}", whoAborted.getName()));
             player1.sendMessage(ChatColor.RED + Main.getInstance().getMessages().getString("you_aborted_trade"));
@@ -328,7 +329,7 @@ public class Trade {
             case 2:
                 return Arrays.asList(9 * 4 + 0, 9 * 4 + 1, 9 * 5 + 0, 9 * 5 + 1);
             default:
-                return Arrays.asList();
+                return Collections.emptyList();
         }
     }
 
@@ -355,7 +356,7 @@ public class Trade {
             case 2:
                 return Arrays.asList(9 * 4 + 2, 9 * 4 + 3, 9 * 5 + 2, 9 * 5 + 3);
             default:
-                return Arrays.asList();
+                return Collections.emptyList();
         }
     }
 
@@ -367,7 +368,7 @@ public class Trade {
      */
     public List<Integer> getCurrentAllowedSlots(UUID player) {
         if (status || isReadyOrHasAccepted(player)) {
-            return Arrays.asList();
+            return Collections.emptyList();
         }
         if (economy == null) {
             return Arrays.asList(9 * 0 + 0, 9 * 0 + 1, 9 * 0 + 2, 9 * 0 + 3,
@@ -435,7 +436,7 @@ public class Trade {
      */
     public List<Integer> getCurrentIncreaseMoneySlot(UUID player, byte increaseType) {
         if (economy == null) { // no economy plugin = no trading
-            return Arrays.asList();
+            return Collections.emptyList();
         }
         byte invType = (byte) 0;
         if (traders[0].equals(player)) {
@@ -449,16 +450,16 @@ public class Trade {
         if (invType == 0) {
             switch (increaseType) {
                 case 0:
-                    return Arrays.asList(9 * 4 + 0);
+                    return Collections.singletonList(9 * 4 + 0);
                 case 1:
-                    return Arrays.asList(9 * 4 + 1);
+                    return Collections.singletonList(9 * 4 + 1);
                 case 2:
-                    return Arrays.asList(9 * 4 + 2);
+                    return Collections.singletonList(9 * 4 + 2);
                 case 3:
-                    return Arrays.asList(9 * 4 + 3);
+                    return Collections.singletonList(9 * 4 + 3);
             }
         }
-        return Arrays.asList();
+        return Collections.emptyList();
     }
 
     /**

@@ -14,9 +14,9 @@ public class TradeRequestAcceptEvent extends Event implements Cancellable {
     private static final HandlerList handlerList = new HandlerList();
 
     // The sender of the trade request.
-    private Player sender;
+    private final Player sender;
     // The target of the trade request.
-    private Player target;
+    private final Player target;
 
     // Defines if the event should be cancelled.
     private boolean cancelled;

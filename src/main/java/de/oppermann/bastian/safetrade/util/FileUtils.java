@@ -17,22 +17,21 @@ public class FileUtils {
      * @throws IOException If something went wrong.
      */
     public static void copy(InputStream from, File to) throws IOException {
-        InputStream inputStream = from;
         OutputStream outputStream = null;
 
         try {
             outputStream = new FileOutputStream(to);
 
-            int read = 0;
+            int read;
             byte[] bytes = new byte[1024];
 
-            while ((read = inputStream.read(bytes)) != -1) {
+            while ((read = from.read(bytes)) != -1) {
                 outputStream.write(bytes, 0, read);
             }
         } finally { // close the steams when finished
-            if (inputStream != null) {
+            if (from != null) {
                 try {
-                    inputStream.close();
+                    from.close();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -5,19 +5,20 @@ import de.oppermann.bastian.safetrade.events.TradeRequestAcceptEvent;
 import de.oppermann.bastian.safetrade.events.TradeRequestEvent;
 import de.oppermann.bastian.safetrade.util.AcceptAction;
 import de.oppermann.bastian.safetrade.util.AcceptCommandManager;
-import de.oppermann.bastian.safetrade.util.JSONUtil;
 import de.oppermann.bastian.safetrade.util.Trade;
+import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.ComponentBuilder;
+import net.md_5.bungee.api.chat.HoverEvent;
+import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.json.simple.JSONArray;
-import org.json.simple.JSONObject;
 
 import java.util.HashMap;
-import java.util.ResourceBundle;
 import java.util.UUID;
 
 /**
@@ -190,11 +191,7 @@ public class TradeCommand implements CommandExecutor {
         target.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("player_wants_to_trade")
                 .replace("{player}", player.getName()));
 
-
-        if (!JSONUtil.sendJSONText(target, generateJSONString())) { // if something failed
-            target.sendMessage(ChatColor.GREEN + Main.getInstance().getMessages().getString("how_to_accept_trade")
-                    .replace("{command}", ChatColor.GOLD + "/trade accept" + ChatColor.GREEN));
-        }
+        target.spigot().sendMessage(generateTextComponents());
 
         final UUID targetUUID = target.getUniqueId();
         final String playerName = player.getName();
@@ -256,59 +253,24 @@ public class TradeCommand implements CommandExecutor {
     }
 
     /**
-     * Generates the json string for how_to_accept_trade.
+     * Generates the component for how_to_accept_trade message.
      *
-     * @return A json string.
+     * @return An array of text components.
      */
-    private String generateJSONString() {
-        JSONArray json = new JSONArray();
+    private BaseComponent[] generateTextComponents() {
+        ComponentBuilder builder = new ComponentBuilder();
         String howToMessage = Main.getInstance().getMessages().getString("how_to_accept_trade") + " ";
-        String[] splitHowToMessage = howToMessage.split("\\{command\\}");
+        String[] splitHowToMessage = howToMessage.split("\\{command}");
         for (int i = 0; i < splitHowToMessage.length - 1; i++) {
-            appendText(json, splitHowToMessage[i]);
-            appendCommand(json);
+            builder.append(splitHowToMessage[i]).color(net.md_5.bungee.api.ChatColor.GREEN);
+            BaseComponent[] hoverComponents = new ComponentBuilder()
+                    .append(Main.getInstance().getMessages().getString("how_to_accept_trade_command_hover")).create();
+            builder.append("/trade accept").color(net.md_5.bungee.api.ChatColor.GOLD)
+                    .event(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/trade accept"))
+                    .event(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new Text(hoverComponents)));
         }
-        appendText(json, splitHowToMessage[splitHowToMessage.length - 1]);
-        return json.toString();
-    }
-
-    /**
-     * Appends a normal text.
-     *
-     * @param array The array the text should be append to.
-     * @param text The text tp append.
-     */
-    private void appendText(JSONArray array, String text) {
-        JSONObject json = new JSONObject();
-        json.put("text", ChatColor.GREEN + text);
-        array.add(json);
-    }
-
-    /**
-     * Appends the /trade accept command.
-     *
-     * @param array The array the command should be append to.
-     */
-    private void appendCommand(JSONArray array) {
-        JSONObject json = new JSONObject();
-        json.put("text", ChatColor.GOLD + "/trade accept");
-        JSONObject clickEvent = new JSONObject();
-        clickEvent.put("action", "run_command");
-        clickEvent.put("value", "/trade accept");
-        json.put("clickEvent", clickEvent);
-        JSONObject hoverEvent = new JSONObject();
-        hoverEvent.put("action", "show_text");
-        JSONArray hoverExtra = new JSONArray();
-        JSONObject hoverText = new JSONObject();
-        String howToCommandHover = Main.getInstance().getMessages().getString("how_to_accept_trade_command_hover");
-        hoverText.put("text", howToCommandHover);
-        hoverExtra.add(hoverText);
-        JSONObject value = new JSONObject();
-        value.put("text", "");
-        value.put("extra", hoverExtra);
-        hoverEvent.put("value", value);
-        json.put("hoverEvent", hoverEvent);
-        array.add(json);
+        builder.append(splitHowToMessage[splitHowToMessage.length - 1]).color(net.md_5.bungee.api.ChatColor.GREEN);
+        return builder.create();
     }
 
 }

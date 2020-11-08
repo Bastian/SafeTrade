@@ -1,10 +1,8 @@
 package de.oppermann.bastian.safetrade.util;
 
-import com.google.common.collect.Lists;
 import de.oppermann.bastian.safetrade.Main;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
@@ -15,11 +13,11 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.ResourceBundle;
 
 /**
  * This class includes some useful function related to trade inventories.
  */
+@SuppressWarnings("PointlessArithmeticExpression")
 public class InventoryUtil {
 
     private final Design design;
@@ -121,7 +119,7 @@ public class InventoryUtil {
      * @param text      The text of the status item.
      */
     public void setPartnerStatus(Inventory inventory, boolean status, boolean done, String text) {
-        ItemStack partnerStatus = null;
+        ItemStack partnerStatus;
         if (status) { // First stage of the trade
             if (done) {
                 partnerStatus = design.getItem("partnerAccepted", text);
@@ -193,7 +191,6 @@ public class InventoryUtil {
      *                       <p><code>3</code> means 'accepted trade and waiting for partner'
      * @param tradeWithMoney Should it be allowed to trade with money?
      */
-    @SuppressWarnings("deprecation") // screw you Mojang!
     public void setOwnControlField(Inventory inventory, byte type, boolean tradeWithMoney) {
         if (type == 0) {
             String[] readyLore = Main.getInstance().getMessages().getString("button_ready_description").split("\n");
