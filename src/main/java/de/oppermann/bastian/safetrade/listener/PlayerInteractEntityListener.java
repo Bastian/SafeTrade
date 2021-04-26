@@ -18,12 +18,8 @@ public class PlayerInteractEntityListener implements Listener {
      */
     @EventHandler
     public void onPlayerInteractEntity(PlayerInteractEntityEvent event) {
-        try {
-            if (!event.getHand().equals(org.bukkit.inventory.EquipmentSlot.HAND)) {
-                return;
-            }
-        } catch (NoClassDefFoundError | NoSuchMethodError ignored) {
-            // Method does not exist in 1.8 or below, that's the reason for the try-catch
+        if (!event.getHand().equals(org.bukkit.inventory.EquipmentSlot.HAND)) {
+            return;
         }
         Player player = event.getPlayer();
         if (!player.isSneaking()) {

@@ -92,18 +92,14 @@ public class Main extends JavaPlugin {
      */
     private String economyName = "No Vault installed";
 
-    /*
-     * (non-Javadoc)
-     * @see org.bukkit.plugin.java.JavaPlugin#onEnable()
-     */
     @Override
     public void onEnable() {
         instance = this;
 
         loadConfiguration();
 
-        Objects.requireNonNull(getCommand("trade")).setExecutor(new TradeCommand());
-        Objects.requireNonNull(getCommand("trade")).setTabCompleter(new TradeTabCompleter());
+        getCommand("trade").setExecutor(new TradeCommand());
+        getCommand("trade").setTabCompleter(new TradeTabCompleter());
 
         Bukkit.getPluginManager().registerEvents(new InventoryClickListener(), this);
         Bukkit.getPluginManager().registerEvents(new InventoryCloseListener(), this);
@@ -112,17 +108,14 @@ public class Main extends JavaPlugin {
         Bukkit.getPluginManager().registerEvents(new PlayerInteractEntityListener(), this);
         Bukkit.getPluginManager().registerEvents(new PlayerPickupItemListener(), this);
 
-        // start metrics
+        // Start metrics
         setupCharts(new Metrics(this, 4));
     }
 
-    /*
-     * (non-Javadoc)
-     * @see org.bukkit.plugin.java.JavaPlugin#onDisable()
-     */
     @Override
     public void onDisable() {
-        for (Trade trade : Trade.getActiveTrades()) { // abort all trades
+        // Abort all trades
+        for (Trade trade : Trade.getActiveTrades()) {
             trade.abort(null);
         }
     }
@@ -275,7 +268,8 @@ public class Main extends JavaPlugin {
         File languageFolder = new File(getDataFolder(), "languages");
         languageFolder.mkdirs();
 
-        try { // copy the default messages to file
+        try {
+            // Copy the default messages to file
             FileUtils.copy(getResource("Messages.properties"), new File(languageFolder, "Messages.properties"));
             // en = default
             FileUtils.copy(getResource("Messages.properties"), new File(languageFolder, "Messages_en.properties"));
@@ -313,8 +307,8 @@ public class Main extends JavaPlugin {
      * Reloads all configuration files.
      */
     public void reload() {
-        this.reloadConfig();
-        this.loadConfiguration();
+        reloadConfig();
+        loadConfiguration();
     }
 
     /**

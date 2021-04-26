@@ -31,10 +31,6 @@ public class TradeCommand implements CommandExecutor {
      */
     private final HashMap<UUID, Long> lastRequest = new HashMap<>();
 
-    /*
-     * (non-Javadoc)
-     * @see org.bukkit.command.CommandExecutor#onCommand(org.bukkit.command.CommandSender, org.bukkit.command.Command, java.lang.String, java.lang.String[])
-     */
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length != 1) {

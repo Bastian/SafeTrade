@@ -23,6 +23,11 @@ public class PlayerPickupItemListener implements Listener {
             // players are not allowed to pick up items while trading
             event.setCancelled(true);
         }
+
+        // When a players trades items but then does not have enough place in their inventory, we drop the
+        // items on the floor. To prevent other players from picking up these items, the item has a "item_owner"
+        // metadata. The code below makes sure that the owner has 30 seconds to pick up the items before anyone
+        // else is able to.
         if (event.getItem().hasMetadata("item_owner")) {
             String owner = "";
             long dropTimestamp = 0;

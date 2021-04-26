@@ -39,7 +39,8 @@ public class TradeTabCompleter implements TabCompleter {
         Iterator<String> iterator = list.iterator();
         while (iterator.hasNext()) {
             String str = iterator.next().toLowerCase();
-            if (!str.startsWith(args[args.length - 1].toLowerCase())) { // don't complete names which don't fit the current input
+            // don't complete names which don't fit the current input
+            if (!str.startsWith(args[args.length - 1].toLowerCase())) {
                 iterator.remove();
             }
         }
