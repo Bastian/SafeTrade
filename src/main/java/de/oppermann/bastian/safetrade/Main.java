@@ -17,6 +17,8 @@ import de.oppermann.bastian.safetrade.util.ResourceBundleControl;
 import de.oppermann.bastian.safetrade.util.Trade;
 import net.milkbowl.vault.economy.Economy;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
+import org.bstats.charts.SingleLineChart;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.RegisteredServiceProvider;
@@ -132,50 +134,50 @@ public class Main extends JavaPlugin {
      */
     private void setupCharts(Metrics metrics) {
         // language in config
-        metrics.addCustomChart(new Metrics.SimplePie("used_language", () ->
+        metrics.addCustomChart(new SimplePie("used_language", () ->
                 getConfig().getString("language", "auto")));
 
-        metrics.addCustomChart(new Metrics.SimplePie("default_locale", () ->
+        metrics.addCustomChart(new SimplePie("default_locale", () ->
                 Locale.getDefault().toLanguageTag()));
 
         // encoding in config
-        metrics.addCustomChart(new Metrics.SimplePie("encoding", () ->
+        metrics.addCustomChart(new SimplePie("encoding", () ->
                 getConfig().getString("encoding", "UTF-8")));
 
         // tradeWithMoney in config
-        metrics.addCustomChart(new Metrics.SimplePie("money_enabled", () ->
+        metrics.addCustomChart(new SimplePie("money_enabled", () ->
                 getConfig().getBoolean("tradeWithMoney", true) ? "enabled" : "disabled"));
 
         // noDebts in config
-        metrics.addCustomChart(new Metrics.SimplePie("no_debts_enabled", () ->
+        metrics.addCustomChart(new SimplePie("no_debts_enabled", () ->
                 getConfig().getBoolean("noDebts", true) ? "enabled" : "disabled"));
 
         // maxTradingDistance in config
-        metrics.addCustomChart(new Metrics.SimplePie("max_trading_distance", () ->
+        metrics.addCustomChart(new SimplePie("max_trading_distance", () ->
                 String.valueOf(getConfig().getInt("maxTradingDistance", 15))));
 
         // tradeThroughWorlds in config
-        metrics.addCustomChart(new Metrics.SimplePie("trade_through_worlds_enabled", () ->
+        metrics.addCustomChart(new SimplePie("trade_through_worlds_enabled", () ->
                 getConfig().getBoolean("tradeThroughWorlds", false) ? "enabled" : "disabled"));
 
         // fastTrade in config
-        metrics.addCustomChart(new Metrics.SimplePie("fast_trade_enabled", () ->
+        metrics.addCustomChart(new SimplePie("fast_trade_enabled", () ->
                 getConfig().getBoolean("fastTrade", false) ? "enabled" : "disabled"));
 
         // successful trades
-        metrics.addCustomChart(new Metrics.SingleLineChart("successful_trades", () -> successfulTrades));
+        metrics.addCustomChart(new SingleLineChart("successful_trades", () -> successfulTrades));
 
         // aborted trades
-        metrics.addCustomChart(new Metrics.SingleLineChart("aborted_trades", () -> abortedTrades));
+        metrics.addCustomChart(new SingleLineChart("aborted_trades", () -> abortedTrades));
 
         // Is Vault used?
-        metrics.addCustomChart(new Metrics.SimplePie("vault_used", () -> hasVault ? "Used" : "Not used"));
+        metrics.addCustomChart(new SimplePie("vault_used", () -> hasVault ? "Used" : "Not used"));
 
         // The used economy plugin
-        metrics.addCustomChart(new Metrics.SimplePie("economy_plugin", () -> economyName));
+        metrics.addCustomChart(new SimplePie("economy_plugin", () -> economyName));
 
         // Download source
-        metrics.addCustomChart(new Metrics.SimplePie("download_source", () -> {
+        metrics.addCustomChart(new SimplePie("download_source", () -> {
             // Now the only source.
             return "spigotmc.org";
         }));
